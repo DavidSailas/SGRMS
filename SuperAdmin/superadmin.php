@@ -1,5 +1,6 @@
 <?php
-    include 'db_connect.php';
+session_start();
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Record Management System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/stylehg.css">
     <style>
         .status-circle {
             display: inline-block;
@@ -28,11 +29,11 @@
             <aside class="sidebar">
                 <nav>
                     <ul>
-                        <li><a href="superadmin.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                        <li><a href="counsel.php"><i class="fas fa-user-cog"></i>Counselors</a></li>
-                        <li><a href="teacher.php"><i class="fas fa-chalkboard-teacher"></i>Teachers</a></li>
-                        <li><a href="students.php"><i class="fas fa-user-graduate"></i>Students</a></li>
-                        <li><a href="case.php"><i class="fas fa-file-alt"></i>Reports</a></li>
+                        <li><a href="/SGRMS/SuperAdmin/superadmin.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                        <li><a href="/SGRMS/Counselors/counsel.php"><i class="fas fa-user-cog"></i>Counselors</a></li>
+                        <li><a href="/SGRMS/Teachers/teacher.php"><i class="fas fa-chalkboard-teacher"></i>Teachers</a></li>
+                        <li><a href="/SGRMS/Students/students.php"><i class="fas fa-user-graduate"></i>Students</a></li>
+                        <li><a href="/SGRMS/Reports/case.php"><i class="fas fa-file-alt"></i>Reports</a></li>
                         <li><a href="#"><i class="fas fa-cogs mr-2"></i>Settings</a></li>
                     </ul> 
                 </nav>

@@ -1,5 +1,5 @@
 <?php
-include 'db_connect.php'; // Ensure database connection is correct
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if all fields exist in $_POST
