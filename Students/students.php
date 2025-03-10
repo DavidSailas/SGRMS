@@ -5,7 +5,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 <!DOCTYPE html>
 <html>
 <head>
-<<<<<<< HEAD
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="/SGRMS/CSS/style.css">
     <link rel="stylesheet" href="/SGRMS/CSS/table.css">
@@ -127,10 +126,8 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
         }
 
     </style>
-=======
     <title>School Guidance Reports Management System - Manage Students</title>
     <link rel="stylesheet" href="/SGRMS/CSS/stylestud.css">
->>>>>>> de5a446a50ab28de30110fe3fe2e7479b5e4548a
 </head>
 <body>
     <div class="container">
