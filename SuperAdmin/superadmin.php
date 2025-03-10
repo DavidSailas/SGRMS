@@ -6,68 +6,83 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Record Management System</title>
-    <link rel="stylesheet" href="/SGRMS/CSS/stylehg.css">
-    <style>
-        .status-circle {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .green {
-            background-color: green;
-        }
-    </style>
-</head> 
+    <title>Student Guidance Record Management System</title>
+    <link rel="stylesheet" href="/SGRMS/CSS/style.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/hg.css">
+</head>
 <body>
-    <header>
-        <div class="head">
-            <h1>Student Record Management System</h1>
-            <aside class="sidebar">
-                <nav>
-                    <ul>
-                        <li><a href="/SGRMS/SuperAdmin/superadmin.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                        <li><a href="/SGRMS/Counselors/counsel.php"><i class="fas fa-user-cog"></i>Counselors</a></li>
-                        <li><a href="/SGRMS/Teachers/teacher.php"><i class="fas fa-chalkboard-teacher"></i>Teachers</a></li>
-                        <li><a href="/SGRMS/Students/students.php"><i class="fas fa-user-graduate"></i>Students</a></li>
-                        <li><a href="/SGRMS/Reports/case.php"><i class="fas fa-file-alt"></i>Reports</a></li>
-                        <li><a href="#"><i class="fas fa-cogs mr-2"></i>Settings</a></li>
-                    </ul> 
-                </nav>
-            </aside> 
+    <div class="container">
+        <aside class="sidebar">
+            <h1>SGRMS</h1>
+            <ul>
+                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
+                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
+                <li><a href="/SGRMS/Teachers/teacher.php"> Teachers</a></li>
+                <li><a href="/SGRMS/Students/students.php"> Students</a></li>
+                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
+                <li><a href="#"> Settings</a></li>
+            </ul>
+        </aside>
+        <div class="wrapper">
+            <section class="stats">
+                <div class="stat-box1">
+                    <h2>Cases</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM case_records");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+                <div class="stat-box">
+                    <h2>Students</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM students");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p>
+                </div>
+                <div class="stat-box">
+                    <h2>Teachers</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM teachers");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+                <div class="stat-box">
+                    <h2>Counselors</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM counselors");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+            </section>
         </div>
-    </header>
-
-    <div class="wrapper">
-        <section class="stats">
-            <div class="stat-box">
-                <h2>Total Students</h2>
-                <p>
-                    <?php
-                        $result = $conn->query("SELECT COUNT(*) AS total FROM students");
-                        if ($result) {
-                            $row = $result->fetch_assoc();
-                            echo $row['total'];
-                        } else {
-                            echo "Error: " . $conn->error;
-                        }
-                    ?>
-                </p>
-            </div>
-            <div class="stat-box">
-                <h2>Total Teachers</h2>
-                <p></p> 
-            </div>
-            <div class="stat-box">
-                <h2>Total Cases</h2>
-                <p></p> 
-            </div>
-        </section>
-
-
     </div>
 </body>
 </html>

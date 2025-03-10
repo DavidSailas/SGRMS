@@ -1,0 +1,58 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+.btn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-add {
+    background: #2563eb;
+}
+.btn-edit {
+    background: #f59e0b;
+}
+.btn-delete {
+    background: #dc2626;
+}
+.btn-view {
+    background: #10b981;
+}
+.status-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.green {
+    background-color: green;
+}
+.search-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.search-bar input, .search-bar select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.search-bar button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+}

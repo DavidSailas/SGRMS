@@ -1,5 +1,5 @@
 <?php
-
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 ?>
 
 <!DOCTYPE html>
@@ -131,15 +131,15 @@
 <body>
     <aside class="sidebar">
         <ul>
-            <li><a href="superadmin.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="appointments.php"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
-            <li><a href="counsel.php"><i class="fas fa-users"></i> Counselors</a></li>
-            <li><a href="students.php"><i class="fas fa-user-graduate"></i> Students</a></li>
-            <li><a href="case.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-            <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
+            <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
+            <li><a href="/SGRMS/Teachers/teacher.php"></i> Teachers</a></li>
+            <li><a href="/SGRMS/Students/students.php"></i> Students</a></li>
+            <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
+            <li><a href="#"> Settings</a></li>
         </ul>
     </aside>
-    <main class="main-content">
+    <main class="wrapper">
         <div class="container">
             <h2>Book an Appointment</h2>
             <form action="appointment.php" method="POST" class="appointment-form">

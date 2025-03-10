@@ -1,0 +1,473 @@
+students.php
+<?php
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Guidance Record Management System</title>
+    <link rel="stylesheet" href="/SGRMS/CSS/style.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/table.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+        <h1>SGRMS</h1>
+            <ul>
+                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
+                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
+                <li><a href="/SGRMS/Teachers/teacher.php"></i> Teachers</a></li>
+                <li><a href="/SGRMS/Students/students.php"></i> Students</a></li>
+                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
+                <li><a href="#"> Settings</a></li>
+            </ul>
+        </aside>
+        <main class="wrapper">
+            <div class="card">
+                <section class="student-list">
+                    <div class="search-flex">
+                        <h2>Student List</h2>
+                        <a href="addstud.php" class="btn btn-add">Add Student</a>
+                        <div class="search-bar">
+                            <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name"
+                                value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                            <select name="filter_educ" id="filter_educ">
+                                <option value="">All Levels</option>
+                                <option value="Elementary" <?php if(isset($_GET['filter_educ']) && $_GET['filter_educ'] == 'Elementary') echo 'selected'; ?>>Elementary</option>
+                                <option value="High School" <?php if(isset($_GET['filter_educ']) && $_GET['filter_educ'] == 'High School') echo 'selected'; ?>>High School</option>
+                                <option value="College" <?php if(isset($_GET['filter_educ']) && $_GET['filter_educ'] == 'College') echo 'selected'; ?>>College</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Educational Level</th>
+                                <th>Section</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <?php
+                                // Initially, display all students.
+                                $sql = "SELECT s_id, lname, fname, mname, bod, educ_level, section FROM students";
+                                $result = $conn->query($sql);
+
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $bod = $row['bod'];
+                                        $birthdate = new DateTime($bod);
+                                        $today = new DateTime();
+                                        $age = $today->diff($birthdate)->y;
+
+                                        echo "<tr data-id='".$row['s_id']."'>  
+                                            <td><span class='status-circle green'></span></td>
+                                            <td>".$row['lname'].", ".$row['fname']." ".$row['mname']."</td>
+                                            <td>".$age."</td>
+                                            <td>".$row['educ_level']."</td>
+                                            <td>".$row['section']."</td>
+                                            <td>
+                                                <a href='viewstud.php?s_id=".$row['s_id']."' class='btn btn-view'>View</a>
+                                                <a href='editstud.php?s_id=".$row['s_id']."' class='btn btn-edit'>Edit</a>
+                                                <a href='deletestud.php?s_id=".$row['s_id']."' class='btn btn-delete' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
+                                            </td>
+                                        </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6'>No students found</td></tr>";
+                                }
+                            ?>
+                        </tbody>
+
+                    </table>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- JavaScript to perform live search using AJAX -->
+    <script>
+    function updateTable() {
+        var search = document.getElementById('search').value;
+        var filter = document.getElementById('filter_educ').value;
+        var url = "searchstud.php?search=" + encodeURIComponent(search) + "&filter_educ=" + encodeURIComponent(filter);
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('studentTableBody').innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+    
+    // Update table as the user types or changes the filter
+    document.getElementById('search').addEventListener('keyup', updateTable);
+    document.getElementById('filter_educ').addEventListener('change', updateTable);
+    </script>
+</body>
+</html>
+
+_________________________
+
+addstud.php
+<?php
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if all fields exist in $_POST
+    $lname = isset($_POST['lname']) ? trim($_POST['lname']) : '';
+    $fname = isset($_POST['fname']) ? trim($_POST['fname']) : '';
+    $mname = isset($_POST['mname']) ? trim($_POST['mname']) : '';
+    $bod = isset($_POST['bod']) ? $_POST['bod'] : '';
+    $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
+    $address = isset($_POST['address']) ? trim($_POST['address']) : '';
+    $mobile_num = isset($_POST['mobile_num']) ? trim($_POST['mobile_num']) : '';
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $educ_level = isset($_POST['educ_level']) ? $_POST['educ_level'] : '';
+    $year_level = isset($_POST['year_level']) ? $_POST['year_level'] : '';
+    $section = isset($_POST['section']) ? trim($_POST['section']) : '';
+
+    if (empty($lname) || empty($fname) || empty($bod) || empty($gender) || empty($address) ||
+        empty($mobile_num) || empty($email) || empty($educ_level) || empty($year_level) || empty($section)) {
+        die("All fields are required.");
+    }
+
+    $sql = "INSERT INTO students (lname, fname, mname, bod, gender, address, mobile_num, email, educ_level, year_level, section) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssssss", $lname, $fname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section);
+
+    if ($stmt->execute()) {
+        echo "Student added successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add Student</title>
+    <script>
+        function calculateAge() {
+            var bod = document.getElementById("bod").value;
+            if (bod) {
+                var today = new Date();
+                var birthDate = new Date(bod);
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                document.getElementById("age").value = age;
+            } else {
+                document.getElementById("age").value = "";
+            }
+        }
+
+        function updateYearLevel() {
+            var eLevel = document.getElementById("educ_level").value;
+            var yearLevelSelect = document.getElementById("year_level");
+            
+            yearLevelSelect.innerHTML = "<option value=''>Select Year Level</option>"; 
+            
+            if (eLevel === "Elementary") {
+                for (var i = 1; i <= 6; i++) {
+                    yearLevelSelect.innerHTML += "<option value='" + i + "'>Grade " + i + "</option>";
+                }
+            } else if (eLevel === "High School") {
+                for (var i = 7; i <= 12; i++) {
+                    yearLevelSelect.innerHTML += "<option value='" + i + "'>Grade " + i + "</option>";
+                }
+            } else if (eLevel === "College") {
+                yearLevelSelect.innerHTML += `
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                `;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Add Student</h2>
+        <form action="addstud.php" method="POST">
+            <label for="lname">Last Name:</label>
+            <input type="text" name="lname" >
+
+            <label for="fname">First Name:</label>
+            <input type="text" name="fname" >
+
+            <label for="mname">Middle Name:</label>
+            <input type="text" name="mname" >
+
+            <label for="bod">Date of Birth:</label>
+            <input type="date" name="bod" id="bod" onchange="calculateAge()">
+
+            <label for="age">Age (Auto-calculated, Not Stored):</label>
+            <input type="text" id="age" readonly>
+
+            <label for="gender">Gender:</label>
+            <select name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="address">Address:</label>
+            <input type="text" name="address">
+
+            <label for="mobile_num">Phone Number:</label>
+            <input type="text" name="mobile_num">
+
+            <label for="email">Email:</label>
+            <input type="email" name="email">
+
+            <label for="educ_level">Educational Level:</label>
+            <select name="educ_level" id="educ_level" onchange="updateYearLevel()">
+                <option value="">Select Level</option>
+                <option value="Elementary">Elementary</option>
+                <option value="High School">High School</option>
+                <option value="College">College</option>
+            </select>
+
+            <label for="year_level">Year Level:</label>
+            <select name="year_level" id="year_level">
+                <option value="">Select Year Level</option>
+            </select>
+
+            <label for="section">Section:</label>
+            <input type="text" name="section">
+
+            <button type="submit">Submit</button>
+        </form>
+        <a href="students.php">Back to Home</a>
+    </div>
+</body>
+</html>
+
+_____________________
+
+editstud.php
+<?php
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+
+if (!isset($_GET['s_id']) || empty($_GET['s_id'])) {
+    die("Invalid student ID.");
+}
+
+$s_id = intval($_GET['s_id']);
+$sql = "SELECT * FROM students WHERE s_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $s_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows == 0) {
+    die("Student not found.");
+}
+
+$student = $result->fetch_assoc();
+$stmt->close();
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $lname = trim($_POST['lname']);
+    $fname = trim($_POST['fname']);
+    $mname = trim($_POST['mname']);
+    $bod = $_POST['bod'];
+    $gender = $_POST['gender'];
+    $address = trim($_POST['address']);
+    $mobile_num = trim($_POST['mobile_num']);
+    $email = trim($_POST['email']);
+    $educ_level = $_POST['educ_level'];
+    $year_level = $_POST['year_level'];
+    $section = trim($_POST['section']);
+
+    // Validate Required Fields
+    if (empty($lname) || empty($fname) || empty($bod) || empty($gender) || empty($address) ||
+        empty($mobile_num) || empty($email) || empty($educ_level) || empty($year_level) || empty($section)) {
+        die("All fields are required.");
+    }
+
+    // Update student record
+    $sql = "UPDATE students SET lname=?, fname=?, mname=?, bod=?, gender=?, address=?, mobile_num=?, email=?, educ_level=?, year_level=?, section=? WHERE s_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssssssi", $lname, $fname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section, $student_id);
+
+    if ($stmt->execute()) {
+        echo "Student updated successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+</head>
+<body>
+    <h2>Edit Student</h2>
+    <form action="editstud.php?s_id=<?php echo $student_id; ?>" method="POST">
+        <label>Last Name:</label>
+        <input type="text" name="lname" value="<?php echo htmlspecialchars($student['lname']); ?>" required>
+
+        <label>First Name:</label>
+        <input type="text" name="fname" value="<?php echo htmlspecialchars($student['fname']); ?>" required>
+
+        <label>Middle Name:</label>
+        <input type="text" name="mname" value="<?php echo htmlspecialchars($student['mname']); ?>">
+
+        <label>Date of Birth:</label>
+        <input type="date" name="bod" value="<?php echo htmlspecialchars($student['bod']); ?>" required>
+
+        <label>Gender:</label>
+        <select name="gender" required>
+            <option value="Male" <?php echo ($student['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+            <option value="Female" <?php echo ($student['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
+        </select>
+
+        <label>Address:</label>
+        <input type="text" name="address" value="<?php echo htmlspecialchars($student['address']); ?>" required>
+
+        <label>Phone Number:</label>
+        <input type="text" name="mobile_num" value="<?php echo htmlspecialchars($student['mobile_num']); ?>" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($student['email']); ?>" required>
+
+        <label>Educational Level:</label>
+        <select name="educ_level" required>
+            <option value="Elementary" <?php echo ($student['educ_level'] == 'Elementary') ? 'selected' : ''; ?>>Elementary</option>
+            <option value="High School" <?php echo ($student['educ_level'] == 'High School') ? 'selected' : ''; ?>>High School</option>
+            <option value="College" <?php echo ($student['educ_level'] == 'College') ? 'selected' : ''; ?>>College</option>
+        </select>
+
+        <label>Year Level:</label>
+        <input type="text" name="year_level" value="<?php echo htmlspecialchars($student['year_level']); ?>" required>
+
+        <label>Section:</label>
+        <input type="text" name="section" value="<?php echo htmlspecialchars($student['section']); ?>" required>
+
+        <button type="submit">Update</button>
+    </form>
+    <a href="students.php">Back to Students</a>
+</body>
+</html>
+
+____________________
+
+viewstud.php
+<?php
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+
+if (!isset($_GET['s_id']) || !filter_var($_GET['s_id'], FILTER_VALIDATE_INT)) {
+    die("Invalid student ID.");
+}
+
+$s_id = intval($_GET['s_id']);
+
+$sql = "SELECT * FROM students WHERE s_id = ?";
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$stmt->bind_param("i", $s_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    die("Student not found.");
+}
+
+$row = $result->fetch_assoc();
+
+// Close connections
+$stmt->close();
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Student</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            margin: 50px auto;
+            width: 50%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2563eb;
+        }
+        .info {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back:hover {
+            background-color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Details</h2>
+        <div class="info"><strong>Name:</strong> <?php echo htmlspecialchars($row['lname'] . ", " . $row['fname'] . " " . $row['mname']); ?></div>
+        <div class="info"><strong>Date of Birth:</strong> <?php echo htmlspecialchars($row['bod']); ?></div>
+        <div class="info"><strong>Age:</strong> 
+            <?php 
+                $dob = new DateTime($row['bod']); 
+                echo $dob->diff(new DateTime())->y; 
+            ?>
+        </div>
+        <div class="info"><strong>Educational Level:</strong> <?php echo htmlspecialchars($row['educ_level']); ?></div>
+        <div class="info"><strong>Section:</strong> <?php echo htmlspecialchars($row['section']); ?></div>
+        <a href="students.php" class="back">Back to Students</a>
+    </div>
+</body>
+</html>
+
