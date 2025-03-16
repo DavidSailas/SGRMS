@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+<?php
+include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+?>
+
+>>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +14,7 @@
     <link rel="stylesheet" href="appointments.css">
 </head>
 <body>
+<<<<<<< HEAD
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -24,6 +32,36 @@
         <div class="view-selector">
             <button id="listViewBtn" class="active">List View</button>
             <button id="calendarViewBtn">Calendar View</button>
+=======
+    <aside class="sidebar">
+        <ul>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
+            <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
+            <li><a href="/SGRMS/Teachers/teacher.php"></i> Teachers</a></li>
+            <li><a href="/SGRMS/Students/students.php"></i> Students</a></li>
+            <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
+            <li><a href="#"> Settings</a></li>
+        </ul>
+    </aside>
+    <main class="wrapper">
+        <div class="container">
+            <h2>Book an Appointment</h2>
+            <form action="appointment.php" method="POST" class="appointment-form">
+                <label for="s_id">Student ID:</label>
+                <input type="number" name="s_id" >
+                <label for="t_id">Teacher ID:</label>
+                <input type="number" name="t_id" >
+                <label for="p_id">Parent ID:</label>
+                <input type="number" name="p_id">
+                <label for="date">Date:</label>
+                <input type="date" name="date" >
+                <label for="time">Time:</label>
+                <input type="time" name="time" >
+                <label for="reason">Reason:</label>
+                <textarea name="reason" ></textarea>
+                <button type="submit" name="submit" class="btn">Book Appointment</button>
+            </form>
+>>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
         </div>
 
         <!-- List View -->

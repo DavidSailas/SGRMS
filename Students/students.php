@@ -126,6 +126,8 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
         }
 
     </style>
+    <title>School Guidance Reports Management System - Manage Students</title>
+    <link rel="stylesheet" href="/SGRMS/CSS/stylestud.css">
 </head>
 <body>
     <div class="container">

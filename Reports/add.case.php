@@ -19,7 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssssssss", $student_name, $grade_section, $case_type, $description, $reported_by, $filed_date, $filed_time, $status);
 
+<<<<<<< HEAD
     if ($stmt->execute()) {
+=======
+    if ($conn->query($update_sql) === TRUE) {
+>>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
         echo "Case added successfully!";
     } else {
         echo "Error: " . $conn->error;

@@ -9,6 +9,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="/SGRMS/CSS/style.css">
     <link rel="stylesheet" href="/SGRMS/CSS/hg.css">
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
 
@@ -67,6 +68,8 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
         }
 
     </style>
+=======
+>>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 </head>
 <body>
     <div class="container">
@@ -140,6 +143,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                     </p> 
                 </div>
             </section>
+<<<<<<< HEAD
 
             <div class="box-page">
                 <section class="analytics">
@@ -200,6 +204,8 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                     </div>
                 </section>
             </div>
+=======
+>>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
         </div>
     </div>
 </body>
