@@ -1,184 +1,182 @@
-<?php
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointments & Schedules</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-       body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #eef2ff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-  
-      font-family: 'Roboto', sans-serif;
-            background-color: #f3f4f6;
-            margin: 0;
-            padding: 0;
-            
-       }
-  .sidebar {
-      width: 250px;
-      background: #4c6ef5;
-      color: white;
-      height: 100vh;
-      padding: 20px;
-      position: fixed;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  .sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-  }
-  
-  .sidebar ul li {
-      padding: 15px 0;
-  }
-  
-  .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-      transition: 0.3s;
-  }
-  
-  .sidebar ul li a i {
-      margin-right: 10px;
-  }
-  
-  .sidebar ul li a:hover {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 10px;
-      border-radius: 8px;
-  }
-  
-  /* Main Content */
-  .main-content {
-      margin-left: 270px;
-      padding: 40px;
-      width: calc(100% - 270px);
-  }
-  
-  .container {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Form Styles */
-  .appointment-form {
-      display: flex;
-      flex-direction: column;
-  }
-  
-  .appointment-form label {
-      margin-top: 10px;
-      font-weight: 500;
-  }
-  
-  .appointment-form input, 
-  .appointment-form textarea {
-      padding: 12px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-  }
-  
-  /* Button Styles */
-  .btn {
-      background-color: #4c6ef5;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: 500;
-      transition: 0.3s;
-  }
-  
-  .btn:hover {
-      background-color: #3b5bdb;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-      .sidebar {
-          width: 200px;
-      }
-      .main-content {
-          margin-left: 220px;
-          width: calc(100% - 220px);
-      }
-  }
-    </style>
+    <title>Appointment Management</title>
+    <link rel="stylesheet" href="appointments.css">
 </head>
 <body>
-    <aside class="sidebar">
-        <ul>
-            <li><a href="superadmin.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="appointments.php"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
-            <li><a href="counsel.php"><i class="fas fa-users"></i> Counselors</a></li>
-            <li><a href="students.php"><i class="fas fa-user-graduate"></i> Students</a></li>
-            <li><a href="case.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-            <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
-        </ul>
-    </aside>
-    <main class="main-content">
-        <div class="container">
-            <h2>Book an Appointment</h2>
-            <form action="appointment.php" method="POST" class="appointment-form">
-                <label for="s_id">Student ID:</label>
-                <input type="number" name="s_id" >
-                <label for="t_id">Teacher ID:</label>
-                <input type="number" name="t_id" >
-                <label for="p_id">Parent ID:</label>
-                <input type="number" name="p_id">
-                <label for="date">Date:</label>
-                <input type="date" name="date" >
-                <label for="time">Time:</label>
-                <input type="time" name="time" >
-                <label for="reason">Reason:</label>
-                <textarea name="reason" ></textarea>
-                <button type="submit" name="submit" class="btn">Book Appointment</button>
-            </form>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Appointment Management</h1>
+            <button id="showModalBtn" class="btn btn-primary">New Appointment</button>
+        </header>
+
+        <!-- Role Selector -->
+        <section class="role-selector">
+            <div id="roleCounselor" class="role-option">Guidance Counselor</div>
+            <div id="roleRequester" class="role-option">Parent/Teacher</div>
+        </section>
+
+        <!-- View Selector -->
+        <div class="view-selector">
+            <button id="listViewBtn" class="active">List View</button>
+            <button id="calendarViewBtn">Calendar View</button>
         </div>
-    </main>
+
+        <!-- List View -->
+        <main id="listView" class="card">
+            <section>
+                <div class="filter-container">
+                    <select id="filterStatus">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="completed">Completed</option>
+                        <option value="canceled">Canceled</option>
+                        <option value="no-show">No-Show</option>
+                    </select>
+                    <select id="filterRequester">
+                        <option value="all">All Requesters</option>
+                        <option value="parent">Parent</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                    <input type="date" id="filterDate">
+                </div>
+            </section>
+            <section>
+                <table id="appointmentsTable">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Date & Time</th>
+                            <th>Requester</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsBody">
+                        <!-- Appointments will be listed here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- Calendar View -->
+        <main id="calendarView" class="card" style="display: none;">
+            <div class="view-selector">
+                <button id="dayViewBtn">Day</button>
+                <button id="weekViewBtn">Week</button>
+                <button id="monthViewBtn" class="active">Month</button>
+            </div>
+            <div id="calendar" class="calendar">
+                <div class="calendar-header">
+                    <button id="prevBtn">Prev</button>
+                    <span id="monthName"></span>
+                    <button id="nextBtn">Next</button>
+                </div>
+                <div id="calendarGrid" class="calendar-grid"></div>
+            </div>
+        </main>
+
+        <!-- New Appointment Modal -->
+        <div id="newAppointmentModal" class="modal-backdrop" style="display: none;">
+            <div class="modal">
+                <h2>New Appointment</h2>
+                <form id="newAppointmentForm">
+                    <div>
+                        <label>Student Name</label>
+                        <input type="text" id="studentName" required>
+                    </div>
+                    <div id="requesterNameWrapper" style="display: none;">
+                        <label>Your Name</label>
+                        <input type="text" id="requesterName" required>
+                    </div>
+                    <div>
+                        <label>Appointment Date</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+                    <div>
+                        <label>Appointment Time</label>
+                        <input type="time" id="appointmentTime" required>
+                    </div>
+                    <div>
+                        <label>Requester Type</label>
+                        <select id="requesterType">
+                            <option value="parent">Parent</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Reason for Appointment</label>
+                        <textarea id="appointmentReason" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancelModalBtn">Cancel</button>
+                        <button type="submit" id="submitAppointmentBtn">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    
+<div id="appointmentDetailModal" class="modal-backdrop" style="display: none;">
+    <div class="modal">
+        <h2>Appointment Details</h2>
+        <div id="appointmentDetailContent">
+            <!-- Appointment details will be displayed here -->
+        </div>
+        <button id="closeDetailModalBtn">Close</button>
+    </div>
+</div>
+
+
+        <!-- Appointment Detail Modal -->
+        <div id="updateStatusSection" style="display: none;">
+                    <h3>Update Session Status</h3>
+                    <label for="appointmentStatus">Status:</label>
+                    <select id="appointmentStatus">
+                        <option value="completed">Completed</option>
+                        <option value="no-show">No-Show</option>
+                    </select>
+                    <h3>Session Notes</h3>
+                    <textarea id="sessionNotes" placeholder="Add notes or feedback" rows="4"></textarea>
+                </div>
+
+                <button id="updateAppointmentBtn">Update Appointment</button>
+                <button id="closeDetailModalBtn">Close</button>
+            </div>
+        </div>
+
+        <!-- Reschedule Modal -->
+        <div id="rescheduleModal" class="modal-backdrop" style="display: none;">
+            <div class="modal">
+                <h2>Reschedule Appointment</h2>
+                <form id="rescheduleForm">
+                    <div>
+                        <label>New Date</label>
+                        <input type="date" id="rescheduleDate" required>
+                    </div>
+                    <div>
+                        <label>New Time</label>
+                        <input type="time" id="rescheduleTime" required>
+                    </div>
+                    <div>
+                        <label>Reason for Rescheduling</label>
+                        <textarea id="rescheduleReason" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancelRescheduleBtn">Cancel</button>
+                        <button type="submit" id="submitRescheduleBtn">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="appointments.js"></script>
 </body>
 </html>
-
-<?php
-if (isset($_POST['submit'])) {
-    $student_id = $_POST['s_id'];
-    $teacher_id = $_POST['t_id'];
-    $parent_id = $_POST['p_id'] ?? NULL;
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-    $reason = $_POST['reason'];
-
-    $stmt = $conn->prepare("INSERT INTO appointments (s_id, t_id, p_id, date, time, reason) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("iiisss", $student_id, $teacher_id, $parent_id, $date, $time, $reason);
-
-    if ($stmt->execute()) {
-        echo "<p style='color:green; text-align:center;'>Appointment booked successfully!</p>";
-    } else {
-        echo "<p style='color:red; text-align:center;'>Error booking appointment: " . $conn->error . "</p>";
-    }
-    $stmt->close();
-}
-?>

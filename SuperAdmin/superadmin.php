@@ -6,68 +6,201 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Record Management System</title>
-    <link rel="stylesheet" href="/SGRMS/CSS/stylehg.css">
+    <title>Student Guidance Record Management System</title>
+    <link rel="stylesheet" href="/SGRMS/CSS/style.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/hg.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .status-circle {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .green {
-            background-color: green;
-        }
-    </style>
-</head> 
-<body>
-    <header>
-        <div class="head">
-            <h1>Student Record Management System</h1>
-            <aside class="sidebar">
-                <nav>
-                    <ul>
-                        <li><a href="/SGRMS/SuperAdmin/superadmin.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                        <li><a href="/SGRMS/Counselors/counsel.php"><i class="fas fa-user-cog"></i>Counselors</a></li>
-                        <li><a href="/SGRMS/Teachers/teacher.php"><i class="fas fa-chalkboard-teacher"></i>Teachers</a></li>
-                        <li><a href="/SGRMS/Students/students.php"><i class="fas fa-user-graduate"></i>Students</a></li>
-                        <li><a href="/SGRMS/Reports/case.php"><i class="fas fa-file-alt"></i>Reports</a></li>
-                        <li><a href="#"><i class="fas fa-cogs mr-2"></i>Settings</a></li>
-                    </ul> 
-                </nav>
-            </aside> 
-        </div>
-    </header>
 
-    <div class="wrapper">
-        <section class="stats">
-            <div class="stat-box">
-                <h2>Total Students</h2>
-                <p>
+        .box-page {
+            display: grid;
+            grid-template-columns: 2fr 1fr; 
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .analytics {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            grid-column: 1; 
+            grid-row: 1; 
+            height: 400px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .analytics canvas {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: 300px;
+        }
+
+        .appointment {
+            grid-column: 1; 
+            grid-row: 2; 
+            height: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .activities {
+            grid-column: 2; 
+            grid-row: 1 / span 2; 
+            height: 725px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .analytics h2, .activities h2, .appointment h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #004085;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>SGRMS</h1>
+            <ul>
+                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
+                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
+                <li><a href="/SGRMS/Teachers/teacher.php"> Teachers</a></li>
+                <li><a href="/SGRMS/Students/students.php"> Students</a></li>
+                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
+                <li><a href="#"> Settings</a></li>
+            </ul>
+        </aside>
+        <div class="wrapper">
+            <section class="stats">
+                <div class="stat-box1">
+                    <h2>Cases</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM case_records");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+                <div class="stat-box">
+                    <h2>Students</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM students");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p>
+                </div>
+                <div class="stat-box">
+                    <h2>Teachers</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM teachers");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+                <div class="stat-box">
+                    <h2>Counselors</h2>
+                    <p>
+                        <?php
+                            $result = $conn->query("SELECT COUNT(*) AS total FROM counselors");
+                            if ($result) {
+                                $row = $result->fetch_assoc();
+                                echo $row['total'];
+                            } else {
+                                echo "Error: " . $conn->error;
+                            }
+                        ?>
+                    </p> 
+                </div>
+            </section>
+
+            <div class="box-page">
+                <section class="analytics">
+                    <h2>Case Report Analytics</h2>
+                    <canvas id="caseChart"></canvas>
+
                     <?php
-                        $result = $conn->query("SELECT COUNT(*) AS total FROM students");
-                        if ($result) {
-                            $row = $result->fetch_assoc();
-                            echo $row['total'];
-                        } else {
-                            echo "Error: " . $conn->error;
+                        $caseData = array_fill(1, 12, 0); // Initialize array for 12 months (Jan-Dec)
+
+                        $result = $conn->query("SELECT MONTH(filed_date) AS month, COUNT(*) AS total FROM case_records WHERE filed_date IS NOT NULL GROUP BY MONTH(filed_date)");
+
+                        while ($row = $result->fetch_assoc()) {
+                            $caseData[intval($row['month'])] = $row['total']; // Ensure keys are integers
                         }
                     ?>
-                </p>
-            </div>
-            <div class="stat-box">
-                <h2>Total Teachers</h2>
-                <p></p> 
-            </div>
-            <div class="stat-box">
-                <h2>Total Cases</h2>
-                <p></p> 
-            </div>
-        </section>
 
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            var ctx = document.getElementById('caseChart').getContext('2d');
+                            var caseChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                                    datasets: [{
+                                        label: 'Number of Cases',
+                                        data: <?php echo json_encode(array_values($caseData)); ?>,
+                                        borderColor: 'rgba(0, 102, 255, 1)',
+                                        backgroundColor: 'rgba(0, 102, 255, 0.2)',
+                                        borderWidth: 2,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </section>
 
+                <section class="activities">
+                    <div class="activities-box">
+                        <h2>Recent Activities</h2>
+                        <!-- activities content -->
+                    </div>
+                </section>
+
+                <section class="appointment">
+                    <div class="appointment-box">
+                        <h2>Appointments</h2>
+                        <!-- appointments content -->
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 </body>
 </html>

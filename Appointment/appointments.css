@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f7fc;
+}
+
+.container {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0056b3;
+    color: white;
+    padding: 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #007bff;
+}
+
+.role-selector {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.role-option {
+    display: inline-block;
+    margin: 0 20px;
+    padding: 10px;
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.role-option:hover {
+    background-color: #ddd;
+}
+
+.role-option.selected {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.view-selector button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.view-selector button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.card {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+select,
+input {
+    padding: 5px;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.status-badge {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status-badge.pending {
+    background-color: #ffcc00;
+}
+
+.status-badge.approved {
+    background-color: #28a745;
+}
+
+.status-badge.completed {
+    background-color: #6c757d;
+}
+
+.status-badge.canceled {
+    background-color: #dc3545;
+}
+
+.status-badge.no-show {
+    background-color: #6c757d;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+}
+
+button[type="button"] {
+    background-color: #dc3545;
+}

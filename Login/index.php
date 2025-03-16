@@ -1,11 +1,12 @@
 <?php
 session_start();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="/SGRMS/CSS/stylelog.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/log.css">
     <style>
         .error {
             color: red;
