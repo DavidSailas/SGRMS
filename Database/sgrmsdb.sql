@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2025 at 02:27 PM
+-- Generation Time: Mar 17, 2025 at 01:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,13 +24,28 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `activity_logs`
+--
+
+CREATE TABLE `activity_logs` (
+  `id` int(11) NOT NULL,
+  `activity` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `timestamp` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `case_records`
 --
 
 CREATE TABLE `case_records` (
   `case_id` int(11) NOT NULL,
   `student_name` varchar(100) NOT NULL,
-  `grade_section` varchar(50) NOT NULL,
+  `academic_level` varchar(50) NOT NULL,
+  `grade_level` int(10) NOT NULL,
+  `course_section` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `case_type` varchar(100) NOT NULL,
   `reported_by` varchar(100) NOT NULL,
@@ -43,14 +58,15 @@ CREATE TABLE `case_records` (
 -- Dumping data for table `case_records`
 --
 
-INSERT INTO `case_records` (`case_id`, `student_name`, `grade_section`, `description`, `case_type`, `reported_by`, `filed_date`, `filed_time`, `status`) VALUES
-(1, 'John Bert D. Plameran', 'Grade 1', 'Image loss', 'Cheater', '', '2025-03-09', '17:14:53', ''),
-(2, 'Christian Abendan', 'BSIT 3B', 'Ge harass niya si david', 'personal_issue', '', '2025-03-09', '17:14:53', ''),
-(3, 'David Villondo', 'BSIT 3B', 'Nang cheat', 'academic issue', '', '2025-03-09', '17:14:53', ''),
-(4, 'John', 'BSIT 3B', 'wala ra', 'Cheater', 'wala ra', '2222-01-01', '11:11:00', 'Pending'),
-(5, 'John', 'BSIT 3B', 'asdasd', 'Cheater', 'wala ra', '2025-03-10', '05:01:48', 'Pending'),
-(6, 'John', 'BSIT 3B', 'Cheating during summative test', 'Academic Issue', 'Christian James Abendan', '2025-03-10', '05:10:17', 'Pending'),
-(7, 'John', 'BSIT 3B', 'cheating', 'Academic Issue', 'Christian James Abendan', '2025-03-10', '05:13:38', 'Pending');
+INSERT INTO `case_records` (`case_id`, `student_name`, `academic_level`, `grade_level`, `course_section`, `description`, `case_type`, `reported_by`, `filed_date`, `filed_time`, `status`) VALUES
+(1, 'John Bert D. Plameran', 'Grade 1', 0, '', 'Image loss', 'Cheater', '', '2025-03-09', '17:14:53', 'Pending'),
+(2, 'Christian Abendan', 'BSIT 3B', 0, '', 'Ge harass niya si david', 'personal_issue', '', '2025-03-09', '17:14:53', 'Pending'),
+(3, 'David Villondo', 'BSIT 3B', 0, '', 'Nang cheat', 'academic issue', '', '2025-03-09', '17:14:53', 'Pending'),
+(4, 'John', 'BSIT 3B', 0, '', 'wala ra', 'Cheater', 'wala ra', '2222-01-01', '11:11:00', 'Pending'),
+(5, 'John', 'BSIT 3B', 0, '', 'asdasd', 'Cheater', 'wala ra', '2025-03-10', '05:01:48', 'Pending'),
+(6, 'John', 'BSIT 3B', 0, '', 'Cheating during summative test', 'Academic Issue', 'Christian James Abendan', '2025-03-10', '05:10:17', 'Pending'),
+(7, 'John', 'BSIT 3B', 0, '', 'cheating', 'Academic Issue', 'Christian James Abendan', '2025-03-10', '05:13:38', 'Pending'),
+(8, 'Vince', 'BSIT 3 B', 0, '', 'elementary tirada', 'Manglotasay', 'david and christian', '2025-03-10', '08:52:41', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -97,25 +113,26 @@ CREATE TABLE `students` (
   `email` varchar(50) NOT NULL,
   `educ_level` enum('Elementary','High School','College','Other') NOT NULL,
   `year_level` varchar(50) NOT NULL,
-  `section` varchar(50) NOT NULL
+  `section` varchar(50) NOT NULL,
+  `s_image` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`s_id`, `lname`, `fname`, `mname`, `gender`, `bod`, `address`, `mobile_num`, `email`, `educ_level`, `year_level`, `section`) VALUES
-(1, 'Romano', 'David Sailas', 'Villondo', 'Male', '2003-02-12', 'dakit', '0123456789', 'xacy@mailinator.com', 'College', '3rd Year', 'Butig'),
-(3, 'Brynne Graves', 'Barry Vasquez', 'Elton Sullivan', 'Female', '2010-10-04', 'Minima minim esse no', '0987321654', 'byxohotume@mailinator.com', 'High School', '7', 'Animi modi pariatur'),
-(4, 'Joel Snider', 'Carolyn Avery', 'Oprah Sosa', 'Male', '2005-06-26', 'Excepteur reprehende', '094561237832', 'wocysih@mailinator.com', 'High School', '12', 'Consequat Amet id'),
-(5, 'Elijah Weaver', 'Arden Dillard', 'Kellie Rivas', 'Male', '2009-09-23', 'Rerum laborum in non', 'Cupiditate unde do t', 'havomipof@mailinator.com', 'Elementary', '5', 'Minima sit ipsa aut'),
-(6, 'Carl Bradshaw', 'Elijah Dominguez', 'Lana Morton', 'Female', '2000-08-29', 'Impedit eum quis fu', 'Ullam molestias duis', 'kosogoda@mailinator.com', 'High School', '9', 'Ea non quae esse ame'),
-(7, 'Adrian Zamora', 'Alfonso Bauer', 'Yolanda Mcconnell', 'Male', '2017-04-29', 'Sed deserunt eu iure', 'Ratione illo at tene', 'valecino@mailinator.com', 'Elementary', '2', 'Consequatur in volup'),
-(8, 'Reece Winters', 'Garrett Rodgers', 'Chandler Valencia', 'Male', '2015-02-12', 'Quia commodi sint ei', 'Reprehenderit labor', 'xybo@mailinator.com', 'Elementary', '5', 'Iste iste iure aut a'),
-(9, 'Rosalyn Alvarado', 'Phyllis King', 'Emmanuel Salinas', 'Female', '2020-08-25', 'Cum vel tenetur amet', '09123456789', 'cysatibo@mailinator.com', 'Elementary', '2', 'kamonggay'),
-(10, 'Zelenia Perez', 'Kylie Pace', 'Tad Raymond', 'Female', '1978-10-26', 'Dignissimos ea sit v', '09123456789', 'xupas@mailinator.com', 'College', '4th Year', 'Molestiae maxime in'),
-(11, 'Paki Mann', 'Ruby Justice', 'Lilah Mitchell', 'Male', '2013-10-09', 'Dolor quis quae quo', 'Quae officiis dolor', 'fagu@mailinator.com', 'Elementary', '6', 'Iste nemo consequat'),
-(12, 'Phyllis Battle', 'Kadeem Stuart', 'Jarrod Foreman', 'Male', '2010-12-19', 'Sed eos voluptates e', '09781654256', 'mydevam@mailinator.com', 'High School', 'Grade 7', 'Consequuntur culpa');
+INSERT INTO `students` (`s_id`, `lname`, `fname`, `mname`, `gender`, `bod`, `address`, `mobile_num`, `email`, `educ_level`, `year_level`, `section`, `s_image`) VALUES
+(1, 'Romano', 'David Sailas', 'Villondo', 'Male', '2003-02-12', 'dakit', '0123456789', 'xacy@mailinator.com', 'College', '3rd Year', 'Butig', '/SGRMS/profile/circle-user.png'),
+(3, 'Brynne Graves', 'Barry Vasquez', 'Elton Sullivan', 'Female', '2010-10-04', 'Minima minim esse no', '0987321654', 'byxohotume@mailinator.com', 'High School', '7', 'Animi modi pariatur', '/SGRMS/profile/circle-user.png'),
+(4, 'Joel Snider', 'Carolyn Avery', 'Oprah Sosa', 'Male', '2005-06-26', 'Excepteur reprehende', '094561237832', 'wocysih@mailinator.com', 'High School', '12', 'Consequat Amet id', '/SGRMS/profile/circle-user.png'),
+(5, 'Elijah Weaver', 'Arden Dillard', 'Kellie Rivas', 'Male', '2009-09-23', 'Rerum laborum in non', 'Cupiditate unde do t', 'havomipof@mailinator.com', 'Elementary', '5', 'Minima sit ipsa aut', '/SGRMS/profile/circle-user.png'),
+(6, 'Carl Bradshaw', 'Elijah Dominguez', 'Lana Morton', 'Female', '2000-08-29', 'Impedit eum quis fu', 'Ullam molestias duis', 'kosogoda@mailinator.com', 'High School', '9', 'Ea non quae esse ame', '/SGRMS/profile/circle-user.png'),
+(7, 'Adrian Zamora', 'Alfonso Bauer', 'Yolanda Mcconnell', 'Male', '2017-04-29', 'Sed deserunt eu iure', 'Ratione illo at tene', 'valecino@mailinator.com', 'Elementary', '2', 'Consequatur in volup', '/SGRMS/profile/circle-user.png'),
+(8, 'Reece Winters', 'Garrett Rodgers', 'Chandler Valencia', 'Male', '2015-02-12', 'Quia commodi sint ei', 'Reprehenderit labor', 'xybo@mailinator.com', 'Elementary', '5', 'Iste iste iure aut a', '/SGRMS/profile/circle-user.png'),
+(9, 'Rosalyn Alvarado', 'Phyllis King', 'Emmanuel Salinas', 'Female', '2020-08-25', 'Cum vel tenetur amet', '09123456789', 'cysatibo@mailinator.com', 'Elementary', '2', 'kamonggay', '/SGRMS/profile/circle-user.png'),
+(10, 'Zelenia Perez', 'Kylie Pace', 'Tad Raymond', 'Female', '1978-10-26', 'Dignissimos ea sit v', '09123456789', 'xupas@mailinator.com', 'College', '4th Year', 'Molestiae maxime in', '/SGRMS/profile/circle-user.png'),
+(11, 'Paki Mann', 'Ruby Justice', 'Lilah Mitchell', 'Male', '2013-10-09', 'Dolor quis quae quo', 'Quae officiis dolor', 'fagu@mailinator.com', 'Elementary', '6', 'Iste nemo consequat', '/SGRMS/profile/circle-user.png'),
+(12, 'Phyllis Battle', 'Kadeem Stuart', 'Jarrod Foreman', 'Male', '2010-12-19', 'Sed eos voluptates e', '09781654256', 'mydevam@mailinator.com', 'High School', 'Grade 7', 'Consequuntur culpa', '/SGRMS/profile/circle-user.png');
 
 -- --------------------------------------------------------
 
@@ -173,6 +190,12 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
 --
 
 --
+-- Indexes for table `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `case_records`
 --
 ALTER TABLE `case_records`
@@ -209,10 +232,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `case_records`
 --
 ALTER TABLE `case_records`
-  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `counselors`

@@ -41,6 +41,7 @@ table th, table td {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    margin-top: 25px;
 }
 .search-bar input, .search-bar select {
     padding: 8px;

@@ -1,5 +1,18 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+/*
+// After adding a new student
+$activity = "Added a new student: {$student_name}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+
+// After updating a student
+$activity = "Updated student ID: {$s_id}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+
+// After deleting a student
+$activity = "Deleted student ID: {$s_id}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+*/
 ?>
 
 <!DOCTYPE html>
@@ -125,29 +138,70 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
             margin-top: 10px;
         }
 
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
     </style>
-    <title>School Guidance Reports Management System - Manage Students</title>
-    <link rel="stylesheet" href="/SGRMS/CSS/stylestud.css">
 </head>
 <body>
     <div class="container">
-        <aside class="sidebar">
-            <h1>SGRMS</h1>
-            <ul>
-                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
-                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
-                <li><a href="/SGRMS/Teachers/teacher.php"> Teachers</a></li>
-                <li><a href="/SGRMS/Students/students.php"> Students</a></li>
-                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
-                <li><a href="#"> Settings</a></li>
-            </ul>
-        </aside>
+    <aside class="sidebar">
+        <h1>SGRMS</h1>
+        <ul>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+            <li class="has-submenu">
+                <a href="#" id="profiling-link">Profiling</a>
+                <ul class="submenu" id="profiling-submenu">
+                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                </ul>
+            </li>
+            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </aside>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
+
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
         <main class="wrapper">
             <div class="card">
                 <section class="student-list">
                     <div class="search-flex">
-                        <h2>Student List</h2>
-                        <button class="btn btn-add" onclick="openModal()">Add Student</button>
+                        <h2>Student List</h2>                       
                         <div class="search-bar">
                             <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name">
                             <select name="filter_educ" id="filter_educ">
@@ -157,6 +211,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                                 <option value="College">College</option>
                             </select>
                         </div>
+                        <button class="btn btn-add" onclick="openModal()">Add Student</button>
                     </div>
                     <table>
                         <thead>
@@ -226,12 +281,13 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
         </div>
     </div>
 
-    <!-- Add Student Modal -->
-    <div id="addStudentModal" class="modal">
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Add Student</h2>
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h2 id="modalTitle">Edit Student</h2>
             <form id="studentForm">
+                <input type="hidden" name="s_id" value="">
                 <label for="lname">Last Name:</label>
                 <input type="text" name="lname" required>
 
@@ -261,20 +317,84 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                 <input type="email" name="email" required>
 
                 <label for="educ_level">Educational Level:</label>
-                <select name="educ_level" id="educ_level" onchange="updateYearLevel()" required>
-                    <option value="">Select Level</option>
+                <select id="educ_level" name="educ_level">
+                    <option value="">Select Educational Level</option>
                     <option value="Elementary">Elementary</option>
                     <option value="High School">High School</option>
                     <option value="College">College</option>
                 </select>
 
                 <label for="year_level">Year Level:</label>
-                <select name="year_level" id="year_level" required>
+                <select id="year_level" name="year_level">
                     <option value="">Select Year Level</option>
                 </select>
 
                 <label for="section">Section:</label>
                 <input type="text" name="section" required>
+
+                <label for="image">Profile Image:</label>
+                <input type="file" name="image" accept="image/*"><br>
+                <img src="/SGRMS/profile/circle-user.png" alt="Profile Image" id="previewImage" style="max-width: 100px; max-height: 100px;">
+
+                <button type="submit" class="btn btn-save">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add Student</h2>
+            <form id="studentForm">
+                <input type="hidden" name="s_id" value="">
+                <label for="lname">Last Name:</label>
+                <input type="text" name="lname" required>
+
+                <label for="fname">First Name:</label>
+                <input type="text" name="fname" required>
+
+                <label for="mname">Middle Name:</label>
+                <input type="text" name="mname">
+
+                <label for="bod">Date of Birth:</label>
+                <input type="date" name="bod" id="bod" required>
+
+                <label for="gender">Gender:</label>
+                <select name="gender" required>
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
+                <label for="address">Address:</label>
+                <input type="text" name="address" required>
+
+                <label for="mobile_num">Mobile Number:</label>
+                <input type="text" name="mobile_num" required>
+
+                <label for="email">Email:</label>
+                <input type="email" name="email" required>
+
+                <label for="educ_level">Educational Level:</label>
+                <select id="educ_level" name="educ_level">
+                    <option value="">Select Educational Level</option>
+                    <option value="Elementary">Elementary</option>
+                    <option value="High School">High School</option>
+                    <option value="College">College</option>
+                </select>
+
+                <label for="year_level">Year Level:</label>
+                <select id="year_level" name="year_level">
+                    <option value="">Select Year Level</option>
+                </select>
+
+                <label for="section">Section:</label>
+                <input type="text" name="section" required>
+
+                <label for="image">Profile Image:</label>
+                <input type="file" name="image" accept="image/*"><br>
+                <img src="/SGRMS/profile/circle-user.png" alt="Profile Image" id="previewImage" style="max-width: 100px; max-height: 100px;">
 
                 <button type="submit" class="btn btn-save">Save</button>
             </form>
@@ -282,6 +402,47 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
             <p id="responseMessage"></p> <!-- Placeholder for success/error messages -->
 
             <script>
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    const educLevel = document.getElementById("educ_level");
+                    const yearLevel = document.getElementById("year_level");
+
+                    educLevel.addEventListener("change", function () {
+                        yearLevel.innerHTML = ""; // Clear current options
+
+                        if (this.value === "Elementary") {
+                            for (let i = 1; i <= 6; i++) {
+                                let option = new Option(`Grade ${i}`, `Grade ${i}`);
+                                yearLevel.add(option);
+                            }
+                        } else if (this.value === "High School") {
+                            for (let i = 7; i <= 12; i++) {
+                                let option = new Option(`Grade ${i}`, `Grade ${i}`);
+                                yearLevel.add(option);
+                            }
+                        } else if (this.value === "College") {
+                            let years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+                            years.forEach(year => {
+                                let option = new Option(year, year);
+                                yearLevel.add(option);
+                            });
+                        }
+                    });
+                });
+
+                document.getElementById("image").addEventListener("change", function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById("previewImage").src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.getElementById("previewImage").src = "/SGRMS/profile/circle-user.png";
+                    }
+                });
+
                 document.getElementById("studentForm").addEventListener("submit", function(event) {
                     event.preventDefault(); // Prevent default form submission
 
@@ -300,78 +461,116 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                 });
 
                 function openModal() {
-                    document.getElementById("addStudentModal").style.display = "block";
-                    document.getElementById("modalTitle").textContent = "Add Student";
-                }
+            document.getElementById("addStudentModal").style.display = "block";
+            document.getElementById("modalTitle").textContent = "Add Student";
+        }
 
-                function closeModal() {
-                    document.getElementById("addStudentModal").style.display = "none";
-                    document.getElementById("viewStudentModal").style.display = "none";
-                }
+        function closeModal() {
+            document.getElementById("addStudentModal").style.display = "none";
+            document.getElementById("viewStudentModal").style.display = "none";
+        }
 
-                function editStudent(s_id) {
-                    // Open the modal to edit the student
-                    document.getElementById("addStudentModal").style.display = "block";
-                    document.getElementById("modalTitle").textContent = "Edit Student";
+        function editStudent(s_id) {
+            fetch(`editstud.php?s_id=${s_id}`)
+                .then(response => response.text())
+                .then(data => {
+                    let details = data.split("|");
+                    if (details.length > 1) {
+                        document.querySelector("input[name='s_id']").value = details[0];
+                        document.querySelector("input[name='fname']").value = details[1];
+                        document.querySelector("input[name='lname']").value = details[2];
+                        document.querySelector("input[name='mname']").value = details[3];
+                        document.querySelector("input[name='bod']").value = details[4];
+                        document.querySelector("select[name='gender']").value = details[5];
+                        document.querySelector("input[name='address']").value = details[6];
+                        document.querySelector("input[name='mobile_num']").value = details[7];
+                        document.querySelector("input[name='email']").value = details[8];
+                        document.querySelector("select[name='educ_level']").value = details[9];
+                        document.querySelector("select[name='year_level']").value = details[10];
+                        document.querySelector("input[name='section']").value = details[11];
 
-                    // Fetch student data via GET request (pass s_id to editstud.php)
-                    fetch(`editstud.php?s_id=${s_id}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Populate the form with student data
-                            document.querySelector("input[name='lname']").value = data.lname;
-                            document.querySelector("input[name='fname']").value = data.fname;
-                            document.querySelector("input[name='mname']").value = data.mname;
-                            document.querySelector("input[name='bod']").value = data.bod;
-                            document.querySelector("select[name='gender']").value = data.gender;
-                            document.querySelector("input[name='address']").value = data.address;
-                            document.querySelector("input[name='mobile_num']").value = data.mobile_num;
-                            document.querySelector("input[name='email']").value = data.email;
-                            document.querySelector("select[name='educ_level']").value = data.educ_level;
-                            document.querySelector("select[name='year_level']").value = data.year_level;
-                            document.querySelector("input[name='section']").value = data.section;
-                            document.querySelector("input[name='s_id']").value = s_id; // Hidden input for s_id
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
+                        if (details[12]) {
+                            document.getElementById("previewImage").src = details[12];
+                        }
 
-                function viewStudent(s_id) {
-                    // Open the modal to view the student
-                    document.getElementById("viewStudentModal").style.display = "block";
-
-                    // Fetch student data via GET request (pass s_id to viewstud.php)
-                    fetch(`viewstud.php?s_id=${s_id}`)
-                        .then(response => response.text())
-                        .then(data => {
-                            document.getElementById("viewStudentDetails").innerHTML = data; // Display the student details in the modal
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
-
-                function closeDeleteModal() {
-                    document.getElementById("deleteStudentModal").style.display = "none";
-                }
-
-                let deleteStudentId = null;
-                function openDeleteModal(s_id) {
-                    deleteStudentId = s_id;
-                    document.getElementById("deleteStudentModal").style.display = "block";
-                }
-
-                document.getElementById("confirmDeleteBtn").addEventListener("click", function() {
-                    // Perform the delete request
-                    fetch(`deletestudent.php?s_id=${deleteStudentId}`, {
-                        method: 'GET'
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        alert(data);
-                        location.reload(); // Reload the page to reflect changes
-                    })
-                    .catch(error => console.error('Error:', error));
-
-                    closeDeleteModal();
+                        document.getElementById("editStudentModal").style.display = "block";
+                    } else {
+                        alert("Student not found!");
+                    }
                 });
+        }
+
+        function closeEditModal() {
+            document.getElementById("editStudentModal").style.display = "none";
+        }
+
+        document.getElementById("studentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+
+            fetch("editstud.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert(result);
+                closeEditModal();
+                window.history.replaceState({}, document.title, "/SGRMS/Students/students.php"); // Remove query parameters
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function viewStudent(s_id) {
+            document.getElementById("viewStudentModal").style.display = "block";
+            fetch(`viewstud.php?s_id=${s_id}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("viewStudentDetails").innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteStudentModal").style.display = "none";
+        }
+
+        let deleteStudentId = null;
+        function openDeleteModal(s_id) {
+            deleteStudentId = s_id;
+            document.getElementById("deleteStudentModal").style.display = "block";
+        }
+
+        document.getElementById("confirmDeleteBtn").addEventListener("click", function() {
+            fetch(`deletestudent.php?s_id=${deleteStudentId}`, {
+                method: 'GET'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+
+            closeDeleteModal();
+        });
+
+        function updateTable() {
+            var search = document.getElementById('search').value;
+            var filter = document.getElementById('filter_educ').value;
+            var url = "searchstud.php?search=" + encodeURIComponent(search) + "&filter_educ=" + encodeURIComponent(filter);
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('studentTableBody').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('search').addEventListener('keyup', updateTable);
+        document.getElementById('filter_educ').addEventListener('change', updateTable);
+
             </script>
         </div>
     </div>

@@ -1,6 +1,9 @@
 <?php
 session_start();
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+
+$activitySql = "SELECT activity, timestamp FROM activity_logs ORDER BY timestamp DESC LIMIT 10";
+$activityResult = $conn->query($activitySql);
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +12,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="/SGRMS/CSS/style.css">
     <link rel="stylesheet" href="/SGRMS/CSS/hg.css">
-<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
 
@@ -67,23 +69,66 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
             font-weight: bold;
         }
 
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
     </style>
-=======
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 </head>
 <body>
     <div class="container">
-        <aside class="sidebar">
-            <h1>SGRMS</h1>
-            <ul>
-                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
-                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
-                <li><a href="/SGRMS/Teachers/teacher.php"> Teachers</a></li>
-                <li><a href="/SGRMS/Students/students.php"> Students</a></li>
-                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
-                <li><a href="#"> Settings</a></li>
-            </ul>
-        </aside>
+    <aside class="sidebar">
+        <h1>SGRMS</h1>
+        <ul>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+            <li class="has-submenu">
+                <a href="#" id="profiling-link">Profiling</a>
+                <ul class="submenu" id="profiling-submenu">
+                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                </ul>
+            </li>
+            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </aside>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
+
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
+
         <div class="wrapper">
             <section class="stats">
                 <div class="stat-box1">
@@ -143,8 +188,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                     </p> 
                 </div>
             </section>
-<<<<<<< HEAD
-
             <div class="box-page">
                 <section class="analytics">
                     <h2>Case Report Analytics</h2>
@@ -193,7 +236,17 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                 <section class="activities">
                     <div class="activities-box">
                         <h2>Recent Activities</h2>
-                        <!-- activities content -->
+                        <ul>
+                            <?php
+                                if ($activityResult && $activityResult->num_rows > 0) {
+                                    while ($activityRow = $activityResult->fetch_assoc()) {
+                                        echo "<li><strong>{$activityRow['timestamp']}</strong>: {$activityRow['activity']}</li>";
+                                    }
+                                } else {
+                                    echo "No recent activities found.";
+                                }
+                            ?>
+                        </ul>
                     </div>
                 </section>
 
@@ -204,8 +257,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                     </div>
                 </section>
             </div>
-=======
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
         </div>
     </div>
 </body>

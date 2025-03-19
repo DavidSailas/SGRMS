@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> de5a446a50ab28de30110fe3fe2e7479b5e4548a
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 * {
@@ -14,12 +7,8 @@
     font-family: 'Poppins', sans-serif;
     text-decoration: none;
 }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
+
 body {
-    font-family: 'Roboto', sans-serif;
     background-color: #f3f4f6;
     margin: 0;
     padding: 0;
@@ -60,9 +49,7 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-<<<<<<< HEAD
-=======
-=======
+}
 
 body {
     font-family: Arial, sans-serif;
@@ -169,6 +156,4 @@ th {
 
 .add-btn:hover {
     background: #218838;
->>>>>>> de5a446a50ab28de30110fe3fe2e7479b5e4548a
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 }

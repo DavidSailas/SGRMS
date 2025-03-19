@@ -74,7 +74,8 @@ $conn->close();
     <?php if ($case): ?>
         <div class="case-details">
             <p><strong>Student Name:</strong> <?php echo htmlspecialchars($case['student_name']); ?></p>
-            <p><strong>Grade & Section:</strong> <?php echo htmlspecialchars($case['grade_section']); ?></p>
+            <p><strong>Academic Level:</strong> <?php echo htmlspecialchars($case['academic_level']); ?></p>
+            <p><strong>Course Section:</strong> <?php echo htmlspecialchars($case['course_section']); ?></p>
             <p><strong>Case Type:</strong> <?php echo htmlspecialchars($case['case_type']); ?></p>
             <p><strong>Description:</strong> <?php echo htmlspecialchars($case['description']); ?></p>
             <p><strong>Reported By:</strong> <?php echo htmlspecialchars($case['reported_by']); ?></p>

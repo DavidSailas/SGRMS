@@ -29,6 +29,15 @@ $stmt->close();
 $conn->close();
 
 // Output student details
+echo "<div class='info'><strong>Profile Image:</strong><br>";
+if (!empty($row['s_image'])) {
+    echo "<img src='" . htmlspecialchars($row['s_image']) . "' alt='Profile Image' style='width:150px;height:auto;'>";
+} else {
+    // Display the icon if no image is available
+    echo "<i class='fi fi-tc-circle-user' style='font-size: 150px;'></i>"; // Adjust size as needed
+}
+echo "</div>";
+
 echo "<div class='info'><strong>Name:</strong> " . htmlspecialchars($row['lname'] . ", " . $row['fname'] . " " . $row['mname']) . "</div>";
 echo "<div class='info'><strong>Date of Birth:</strong> " . htmlspecialchars($row['bod']) . "</div>";
 echo "<div class='info'><strong>Age:</strong> " . (new DateTime($row['bod']))->diff(new DateTime())->y . "</div>";

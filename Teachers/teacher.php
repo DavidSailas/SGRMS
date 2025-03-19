@@ -1,5 +1,18 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
+/*
+// After adding a new teacher
+$activity = "Added a new teacher: {$teacher_name}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+
+// After updating a teacher
+$activity = "Updated teacher ID: {$t_id}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+
+// After deleting a teacher
+$activity = "Deleted teacher ID: {$t_id}"; // Customize this message
+$conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
+*/
 ?>
 
 <!DOCTYPE html>
@@ -8,26 +21,71 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
     <title>Manage Teachers</title>
     <link rel="stylesheet" href="/SGRMS/CSS/style.css">
     <link rel="stylesheet" href="/SGRMS/CSS/table.css">
+    <style>
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
-        <aside class="sidebar">
+<aside class="sidebar">
         <h1>SGRMS</h1>
-            <ul>
-                <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
-                <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
-                <li><a href="/SGRMS/Teachers/teacher.php"></i> Teachers</a></li>
-                <li><a href="/SGRMS/Students/students.php"></i> Students</a></li>
-                <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
-                <li><a href="#"> Settings</a></li>
-            </ul>
-        </aside>
+        <ul>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+            <li class="has-submenu">
+                <a href="#" id="profiling-link">Profiling</a>
+                <ul class="submenu" id="profiling-submenu">
+                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                </ul>
+            </li>
+            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </aside>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
+
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
     <main class="wrapper">
         <div class="card">
             <section class="teacher-list">
                 <div class="search-flex">
-                    <h2>Teacher List</h2>
-                    <a href="addteach.php" class="btn btn-add">Add Teacher</a>
+                    <h2>Teacher List</h2>                   
                     <div class="search-bar">
                         <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                         <select name="filter_educ" id="filter_educ">
@@ -37,6 +95,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                             <option value="College" <?php if(isset($_GET['filter_educ']) && $_GET['filter_educ'] == 'College') echo 'selected'; ?>>College</option>
                         </select>
                     </div>
+                    <a href="addteach.php" class="btn btn-add">Add Teacher</a>
                 </div>
                 <table>
                     <thead>

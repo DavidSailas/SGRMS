@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $case = $result->fetch_assoc();
     } else {
-        echo "Case not found!";
+        echo "<script>alert('Case not found!'); window.location.href='case.php';</script>";
         exit;
     }
     $stmt->close();
@@ -22,15 +22,18 @@ if (isset($_GET['id'])) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $student_name = $_POST['student_name'];
-    $grade_section = $_POST['grade_section'];
-    $case_type = $_POST['case_type'];
-    $description = $_POST['description'];
-    $status = $_POST['status'];
+    $student_name = htmlspecialchars($_POST['student_name']);
+    $academic_level = htmlspecialchars($_POST['academic_level']);
+    $course_section = htmlspecialchars($_POST['course_section']);
+    $case_type = htmlspecialchars($_POST['case_type']);
+    $description = htmlspecialchars($_POST['description']);
+    $status = htmlspecialchars($_POST['status']);
 
-    $update_sql = "UPDATE case_records SET student_name = ?, grade_section = ?, case_type = ?, description = ?, status = ? WHERE case_id = ?";
+    $update_sql = "UPDATE case_records 
+                   SET student_name = ?, academic_level = ?, course_section = ?, case_type = ?, description = ?, status = ? 
+                   WHERE case_id = ?";
     $stmt = $conn->prepare($update_sql);
-    $stmt->bind_param("sssssi", $student_name, $grade_section, $case_type, $description, $status, $case_id);
+    $stmt->bind_param("ssssssi", $student_name, $academic_level, $course_section, $case_type, $description, $status, $case_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Case updated successfully!'); window.location.href='case.php';</script>";
@@ -48,7 +51,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Case</title>
+    <title>Edit Case</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -119,13 +122,20 @@ $conn->close();
 <body>
 
 <div class="container">
-    <h2>Update Case</h2>
+    <h2>Edit Case</h2>
     <form method="POST">
         <label for="student_name">Student Name:</label>
         <input type="text" id="student_name" name="student_name" value="<?= htmlspecialchars($case['student_name']) ?>" required>
 
-        <label for="grade_section">Grade & Section:</label>
-        <input type="text" id="grade_section" name="grade_section" value="<?= htmlspecialchars($case['grade_section']) ?>" required>
+        <label for="academic_level">Academic Level:</label>
+        <select id="academic_level" name="academic_level" required>
+            <option value="College" <?= $case['academic_level'] == 'College' ? 'selected' : '' ?>>College</option>
+            <option value="High School" <?= $case['academic_level'] == 'High School' ? 'selected' : '' ?>>High School</option>
+            <option value="Elementary" <?= $case['academic_level'] == 'Elementary' ? 'selected' : '' ?>>Elementary</option>
+        </select>
+
+        <label for="course_section">Course/Section (Optional):</label>
+        <input type="text" id="course_section" name="course_section" value="<?= htmlspecialchars($case['course_section'] ?? '') ?>">
 
         <label for="case_type">Case Type:</label>
         <input type="text" id="case_type" name="case_type" value="<?= htmlspecialchars($case['case_type']) ?>" required>

@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 ?>
 
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +9,31 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Management</title>
     <link rel="stylesheet" href="appointments.css">
+
+    <style>
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
-<<<<<<< HEAD
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -32,17 +51,43 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
         <div class="view-selector">
             <button id="listViewBtn" class="active">List View</button>
             <button id="calendarViewBtn">Calendar View</button>
-=======
-    <aside class="sidebar">
+
+            <aside class="sidebar">
+        <h1>SGRMS</h1>
         <ul>
-            <li><a href="/SGRMS/SuperAdmin/superadmin.php"> Home</a></li>
-            <li><a href="/SGRMS/Counselors/counsel.php"> Counselors</a></li>
-            <li><a href="/SGRMS/Teachers/teacher.php"></i> Teachers</a></li>
-            <li><a href="/SGRMS/Students/students.php"></i> Students</a></li>
-            <li><a href="/SGRMS/Reports/case.php"> Reports</a></li>
-            <li><a href="#"> Settings</a></li>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+            <li class="has-submenu">
+                <a href="#" id="profiling-link">Profiling</a>
+                <ul class="submenu" id="profiling-submenu">
+                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                </ul>
+            </li>
+            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
         </ul>
     </aside>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
+
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
     <main class="wrapper">
         <div class="container">
             <h2>Book an Appointment</h2>
@@ -61,7 +106,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                 <textarea name="reason" ></textarea>
                 <button type="submit" name="submit" class="btn">Book Appointment</button>
             </form>
->>>>>>> 6b3068f81596d28b579c33b0538e5817a47f9b4e
         </div>
 
         <!-- List View -->
