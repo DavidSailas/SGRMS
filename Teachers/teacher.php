@@ -46,40 +46,39 @@ $conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity',
 <body>
 <div class="container">
 <aside class="sidebar">
-        <h1>SGRMS</h1>
-        <ul>
-            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
-            <li class="has-submenu">
-                <a href="#" id="profiling-link">Profiling</a>
-                <ul class="submenu" id="profiling-submenu">
-                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
-                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
-                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
-                </ul>
-            </li>
-            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
-            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
-            <li><a href="#">Settings</a></li>
-        </ul>
-    </aside>
+            <h1>SGRMS</h1>
+            <ul>
+                <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+                <li class="has-submenu">
+                    <a href="#" id="profiling-link">Profiling</a>
+                    <ul class="submenu" id="profiling-submenu">
+                        <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                        <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                        <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                    </ul>
+                </li>
+                <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+                <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </aside>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const profilingLink = document.getElementById("profiling-link");
+                const profilingSubmenu = document.getElementById("profiling-submenu");
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const profilingLink = document.getElementById("profiling-link");
-            const profilingSubmenu = document.getElementById("profiling-submenu");
+                profilingLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    profilingSubmenu.classList.toggle("active");
+                });
 
-            profilingLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                profilingSubmenu.classList.toggle("active");
+                document.addEventListener("click", function (event) {
+                    if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                        profilingSubmenu.classList.remove("active");
+                    }
+                });
             });
-
-            document.addEventListener("click", function (event) {
-                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
-                    profilingSubmenu.classList.remove("active");
-                }
-            });
-        });
-    </script>
+        </script>
 
     <main class="wrapper">
         <div class="card">

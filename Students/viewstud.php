@@ -1,46 +1,41 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
-if (!isset($_GET['s_id']) || !filter_var($_GET['s_id'], FILTER_VALIDATE_INT)) {
-    die("Invalid student ID.");
-}
+if (isset($_GET['s_id'])) {
+    $s_id = $_GET['s_id'];
+    $sql = "SELECT * FROM students WHERE s_id = '$s_id'";
+    $result = $conn->query($sql);
 
-$s_id = intval($_GET['s_id']);
+    if ($result && $result->num_rows > 0) {
+        $student = $result->fetch_assoc();
 
-$sql = "SELECT * FROM students WHERE s_id = ?";
-$stmt = $conn->prepare($sql);
+        // Calculate age
+        $bod = new DateTime($student['bod']);
+        $today = new DateTime();
+        $age = $today->diff($bod)->y;
 
-if (!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
+        // Prepare student data for display
+        $studentData = [
+            's_image' => !empty($student['s_image']) ? htmlspecialchars($student['s_image']) : '',
+            'name' => htmlspecialchars($student['lname'] . ", " . $student['fname'] . " " . $student['mname']),
+            'age' => htmlspecialchars($age),
+            'dob' => htmlspecialchars($student['bod']),
+            'sex' => htmlspecialchars($student['gender']),
+            'address' => htmlspecialchars($student['address']),
+            'mobile_num' => htmlspecialchars($student['mobile_num']),
+            'email' => htmlspecialchars($student['email']),
+            'educ_level' => htmlspecialchars($student['educ_level']),
+            'year_level' => htmlspecialchars($student['year_level']),
+            'section' => htmlspecialchars($student['section']), 
+        ];
 
-$stmt->bind_param("i", $s_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    die("Student not found.");
-}
-
-$row = $result->fetch_assoc();
-
-// Close connections
-$stmt->close();
-$conn->close();
-
-// Output student details
-echo "<div class='info'><strong>Profile Image:</strong><br>";
-if (!empty($row['s_image'])) {
-    echo "<img src='" . htmlspecialchars($row['s_image']) . "' alt='Profile Image' style='width:150px;height:auto;'>";
+        echo json_encode($studentData);
+    } else {
+        echo json_encode(['error' => 'Student not found.']);
+    }
 } else {
-    // Display the icon if no image is available
-    echo "<i class='fi fi-tc-circle-user' style='font-size: 150px;'></i>"; // Adjust size as needed
+    echo json_encode(['error' => 'No student ID provided.']);
 }
-echo "</div>";
 
-echo "<div class='info'><strong>Name:</strong> " . htmlspecialchars($row['lname'] . ", " . $row['fname'] . " " . $row['mname']) . "</div>";
-echo "<div class='info'><strong>Date of Birth:</strong> " . htmlspecialchars($row['bod']) . "</div>";
-echo "<div class='info'><strong>Age:</strong> " . (new DateTime($row['bod']))->diff(new DateTime())->y . "</div>";
-echo "<div class='info'><strong>Educational Level:</strong> " . htmlspecialchars($row['educ_level']) . "</div>";
-echo "<div class='info'><strong>Section:</strong> " . htmlspecialchars($row['section']) . "</div>";
+$conn->close();
 ?>

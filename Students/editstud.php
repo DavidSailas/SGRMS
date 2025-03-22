@@ -1,10 +1,10 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
-if (isset($_POST['save'])) {
-    $s_id = $_POST['s_id'];
-    $fname = $_POST['fname'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $s_id = $_POST['s_id']; 
     $lname = $_POST['lname'];
+    $fname = $_POST['fname'];
     $mname = $_POST['mname'];
     $bod = $_POST['bod'];
     $gender = $_POST['gender'];
@@ -15,35 +15,32 @@ if (isset($_POST['save'])) {
     $year_level = $_POST['year_level'];
     $section = $_POST['section'];
 
-    $sql = "UPDATE students SET fname=?, lname=?, mname=?, bod=?, gender=?, address=?, mobile_num=?, email=?, educ_level=?, year_level=?, section=?";
-    
-    if (!empty($_FILES['s_image']['name'])) {
-        $image = $_FILES['s_image']['name'];
-        $image_tmp = $_FILES['s_image']['tmp_name'];
-        $image_path = "uploads/" . $image;
+    // Handle image upload
+    $default_image = '/SGRMS/profile/circle-user.png'; // Default image path
+    $image = $_FILES['image']['name'];
+    $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/SGRMS/profile/'; // Set target directory
+    $target_file = $target_dir . basename($image);
 
-        move_uploaded_file($image_tmp, $image_path);
-
-        $sql .= ", s_image=?";
-    }
-    
-    $sql .= " WHERE s_id=?";
-    $stmt = $conn->prepare($sql);
-
-    if (!empty($_FILES['s_image']['name'])) {
-        $stmt->bind_param("ssssssssssssi", $fname, $lname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section, $image, $s_id);
+    // Check if an image was uploaded
+    if (!empty($image)) {
+        // Move the uploaded file to the target directory
+        move_uploaded_file($_FILES['image']['tmp_name'], $target_file);
     } else {
-        $stmt->bind_param("sssssssssssi", $fname, $lname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section, $s_id);
+        // Use the default image if no image was uploaded
+        $target_file = $default_image;
     }
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Student information updated successfully!');</script>";
-        echo "<script>window.history.replaceState({}, document.title, '/SGRMS/Students/students.php'); location.reload();</script>";
+    // Update the student record in the database
+    $sql = "UPDATE students SET lname='$lname', fname='$fname', mname='$mname', bod='$bod', gender='$gender', address='$address', mobile_num='$mobile_num', email='$email', educ_level='$educ_level', year_level='$year_level', section='$section', s_image='$target_file' WHERE s_id='$s_id'";
+
+    if ($conn->query($sql) === TRUE) {
+        // Redirect back to students.php after successful update
+        header("Location: /SGRMS/Students/students.php");
+        exit();
     } else {
-        echo "<script>alert('Error updating student information.');</script>";
+        echo "Error: " . $sql . "<br>" . $conn->error;
     }
-    
-    $stmt->close();
+
     $conn->close();
 }
 ?>
