@@ -1,19 +1,78 @@
+// Add
 function openAddModal() {
     document.getElementById('AddModal').style.display = 'block';
 }
 
 function closeAddModal() {
     document.getElementById('AddModal').style.display = 'none';
-    document.getElementById('addTeacherForm').reset(); // Reset the form fields
+    document.getElementById('addTeacherForm').reset(); 
 }
 
+// Authentication
+let originalPassword = "";
+
+function openAuthPopup() {
+    document.getElementById("authPopup").style.display = "block";
+}
+
+function closeAuthPopup() {
+    document.getElementById("authPopup").style.display = "none";
+    document.getElementById("authPassword").value = "";
+}
+
+function authenticatePassword() {
+    const enteredPassword = document.getElementById("authPassword").value;
+
+    fetch("getHGpass.php", { // ✅ FIXED FILE NAME
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "authPassword=" + encodeURIComponent(enteredPassword)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            originalPassword = data.password;
+            document.getElementById("edit_password").type = "text";
+            document.getElementById("edit_password").value = originalPassword;
+            closeAuthPopup();
+        } else {
+            alert("Incorrect password!");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordToggle = document.querySelector(".password-toggle");
+    if (passwordToggle) {
+        passwordToggle.addEventListener("click", function () {
+            const passwordField = document.getElementById("edit_password");
+
+            if (passwordField.type === "password") {
+                if (originalPassword) {
+                    passwordField.type = "text";
+                    passwordField.value = originalPassword; // Show password
+                } else {
+                    openAuthPopup();
+                }
+            } else {
+                passwordField.type = "password";
+                passwordField.value = "***********"; // Hide password
+            }
+        });
+    }
+});
+
+
+
+// Update 
 function openEditModal(Id) {
     fetch(`fetchteach.php?t_id=${Id}`)
         .then(response => response.json())
         .then(data => {
             if (!data.error) {
-                // Populate the form fields with the fetched data
                 document.getElementById('edit_t_id').value = data.t_id; 
+                document.getElementById('edit_u_id').value = data.u_id;
                 document.getElementById('edit_fname').value = data.fname;
                 document.getElementById('edit_mname').value = data.mname;
                 document.getElementById('edit_lname').value = data.lname;
@@ -31,10 +90,9 @@ function openEditModal(Id) {
                     document.getElementById('edit_programField').style.display = 'none'; 
                     document.getElementById('edit_sectionField').style.display = 'block'; 
                 }
-                document.getElementById('edit_username').value = data.username; 
-                document.getElementById('edit_password').value = data.password; 
-
-                // Show the modal
+                document.getElementById('edit_username').value = data.username;
+                document.getElementById('edit_password').value = data.password;  
+              /*document.getElementById('edit_password').setAttribute('data-original-password', data.password);*/
                 document.getElementById("EditModal").style.display = "block";
             } else {
                 console.error(data.error);
@@ -67,7 +125,6 @@ function viewTeacher(Id) {
                 document.getElementById('TeacherYearLevel').textContent = data.year_level;
                 document.getElementById('TeacherSectionProgram').textContent = data.teach_level === 'College' ? data.program : data.section;
                 document.getElementById('TeacherUsername').textContent = data.username;
-                document.getElementById('TeacherPassword').textContent = data.password;
             } else {
                 console.error(data.error);
                 alert("Error: " + data.error);
@@ -85,12 +142,15 @@ window.onclick = function(event) {
     const addModal = document.getElementById('AddModal');
     const editModal = document.getElementById('EditModal');
     const viewModal = document.getElementById('viewTeacherModal');
+    const authModal = document.getElementById('AuthModal');
     if (event.target == addModal) {
         closeAddModal();
     } else if (event.target == editModal) {
         closeEditModal();
     } else if (event.target == viewModal){
         closeViewModal();
+    } else if (event.target == authModal) {
+        closeAuthModal();
     }
 }
 

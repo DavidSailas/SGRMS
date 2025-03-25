@@ -53,7 +53,8 @@
         <span class="close" onclick="closeEditModal()">&times;</span>
         <h2>Edit Teacher</h2>
         <form id="editTeacherForm" method="POST" action="editteach.php" enctype="multipart/form-data">
-            <input type="hidden" id="edit_t_id" name="t_id">  
+            <input type="hidden" id="edit_t_id" name="t_id">
+            <input type="hidden" id="edit_u_id" name="u_id">  
             <label for="edit_fname">First Name:</label>
             <input type="text" id="edit_fname" name="fname" >
             <label for="edit_mname">Middle Name:</label>
@@ -92,48 +93,63 @@
             <input type="text" id="edit_username" name="username">
             <label for="edit_password">Password:</label>
             <input type="password" id="edit_password" name="password">
+            <span class="password-toggle" onclick="openAuthPopup()">
+            <i class="fi fi-ss-eye"></i>
+            </span>
             <button type="submit">Update</button>
         </form>
     </div>
 </div>
 
+<!-- Authentication Modal -->
+<div id="authPopup" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Password Authentication</h3>
+        <input type="password" id="authPassword" placeholder="Enter Head Guidance Password">
+        <button onclick="authenticatePassword()">Submit</button>
+        <button onclick="closeAuthPopup()">Cancel</button>
+    </div>
+</div>
+
 
 <script>
-        function toggleFields() {
-            const teacherLevel = document.getElementById('teach_level').value;
-            const programField = document.getElementById('programField');
-            const sectionField = document.getElementById('sectionField');
 
-            if (teacherLevel === 'College') {
-                programField.style.display = 'block'; 
-                sectionField.style.display = 'none';  
-            } else {
-                programField.style.display = 'none';  
-                sectionField.style.display = 'block'; 
-            }
-        }
+function toggleFields() {
+    const teacherLevel = document.getElementById('teach_level').value;
+    const programField = document.getElementById('programField');
+    const sectionField = document.getElementById('sectionField');
 
-        function edittoggleFields() {
-            const teacherLevel = document.getElementById('edit_teach_level').value;
-            const programField = document.getElementById('edit_programField');
-            const sectionField = document.getElementById('edit_sectionField');
-
-            if (teacherLevel === 'College') {
-                programField.style.display = 'block'; 
-                sectionField.style.display = 'none';  
-            } else {
-                programField.style.display = 'none';  
-                sectionField.style.display = 'block'; 
-            }
-        }
-
-    function openModal() {
-        document.getElementById("TeacherModal").style.display = "block";
+    if (teacherLevel === 'College') {
+        programField.style.display = 'block'; 
+        sectionField.style.display = 'none';  
+    } else {
+        programField.style.display = 'none';  
+        sectionField.style.display = 'block'; 
     }
+}
 
-    function closeModal() {
-        document.getElementById("TeacherModal").style.display = "none";
+function edittoggleFields() {
+    const teacherLevel = document.getElementById('edit_teach_level').value;
+    const programField = document.getElementById('edit_programField');
+    const sectionField = document.getElementById('edit_sectionField');
+
+    if (teacherLevel === 'College') {
+        programField.style.display = 'block'; 
+        sectionField.style.display = 'none';  
+    } else {
+        programField.style.display = 'none';  
+        sectionField.style.display = 'block'; 
     }
+}
+
+function openModal() {
+    document.getElementById("TeacherModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("TeacherModal").style.display = "none";
+}
+
 </script>
 
 <!-- View Teacher Modal -->
@@ -150,7 +166,6 @@
                 <div class="data-item"><strong>Year Level:</strong> <span id="TeacherYearLevel"></span></div>
                 <div class="data-item"><strong>Section/Program:</strong> <span id="TeacherSectionProgram"></span></div>
                 <div class="data-item"><strong>Username:</strong> <span id="TeacherUsername"></span></div>
-                <div class="data-item"><strong>Password:</strong> <span id="TeacherPassword"></span></div>
             </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ if (isset($_GET['t_id'])) {
 
     // Prepare the SQL query to fetch teacher data
     $sql = "SELECT 
+                teachers.t_id, 
                 teachers.lname, 
                 teachers.fname, 
                 teachers.mname, 
@@ -17,32 +18,34 @@ if (isset($_GET['t_id'])) {
                 teachers.year_level, 
                 teachers.section, 
                 teachers.program, 
-                users.username, 
-                users.password 
+                users.username 
             FROM teachers 
             JOIN users ON teachers.u_id = users.u_id 
             WHERE teachers.t_id = ?";
 
     // Prepare and execute the statement
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $t_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $t_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    // Check if the teacher exists
-    if ($result->num_rows > 0) {
-        // Fetch the teacher data as an associative array
-        $teacher = $result->fetch_assoc();
+        // Check if the teacher exists
+        if ($result->num_rows > 0) {
+            // Fetch the teacher data as an associative array
+            $teacher = $result->fetch_assoc();
 
-        // Return the data as JSON
-        echo json_encode($teacher);
+            // Return the data as JSON
+            echo json_encode($teacher);
+        } else {
+            // Return an error if the teacher is not found
+            echo json_encode(['error' => 'Teacher not found']);
+        }
+
+        // Close the statement
+        $stmt->close();
     } else {
-        // Return an error if the teacher is not found
-        echo json_encode(['error' => 'Teacher not found']);
+        echo json_encode(['error' => 'Database query failed']);
     }
-
-    // Close the statement
-    $stmt->close();
 } else {
     // Return an error if no teacher ID is provided
     echo json_encode(['error' => 'No teacher ID provided']);
