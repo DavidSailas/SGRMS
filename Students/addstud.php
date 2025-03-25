@@ -2,6 +2,8 @@
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_num = $_POST['id_num'];
+    $prefix = $_POST['prefix'];
     $lname = $_POST['lname'];
     $fname = $_POST['fname'];
     $mname = $_POST['mname'];
@@ -13,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $educ_level = $_POST['educ_level'];
     $year_level = $_POST['year_level'];
     $section = $_POST['section'];
+    $program = $_POST['program'];
 
     // Handle image upload
     $default_image = '/SGRMS/profile/circle-user.png'; // Default image path
@@ -30,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert into database
-    $sql = "INSERT INTO students (lname, fname, mname, bod, gender, address, mobile_num, email, educ_level, year_level, section, s_image) 
-            VALUES ('$lname', '$fname', '$mname', '$bod', '$gender', '$address', '$mobile_num', '$email', '$educ_level', '$year_level', '$section', '$target_file')";
+    $sql = "INSERT INTO students (id_num, prefix, lname, fname, mname, bod, gender, address, mobile_num, email, educ_level, year_level, section, program, s_image) 
+            VALUES ('$id_num', '$prefix', '$lname', '$fname', '$mname', '$bod', '$gender', '$address', '$mobile_num', '$email', '$educ_level', '$year_level', '$section', '$program', '$target_file')";
 
     if ($conn->query($sql) === TRUE) {
         // Redirect back to students.php after successful insertion

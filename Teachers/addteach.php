@@ -7,23 +7,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mname = $_POST['mname'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
-    $section = isset($_POST['section']) && !empty($_POST['section']) ? $_POST['section'] : 'Not Assigned';
+    $section = $_POST['section'];
+    $program = $_POST['program'];
     $teach_level = $_POST['teach_level'];
-
-    // Prepare and execute the SQL statement
-    $sql = "INSERT INTO teachers (lname, fname, mname, email, phone, section, teach_level) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssss", $lname, $fname, $mname, $email, $phone, $section, $teach_level);
+    $year_level = $_POST['year_level'];
     
-    if ($stmt->execute()) {
-        // Redirect back to the teacher list page after successful insertion
-        header("Location: teacher.php");
-        exit();
+    // New user account details
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
+    $status = 'Pending'; // Set status to Pending
+    $role = 'Teacher';
+
+    // Prepare and execute the SQL statement for users
+    $sqlUser   = "INSERT INTO users (username, password, status, role) VALUES (?, ?, ?, ?)";
+    $stmtUser   = $conn->prepare($sqlUser );
+    $stmtUser ->bind_param("ssss", $username, $password, $status, $role);
+    
+    if ($stmtUser ->execute()) {
+        // Get the last inserted user ID
+        $u_id = $stmtUser ->insert_id;
+
+        // Prepare and execute the SQL statement for teachers
+        $sql = "INSERT INTO teachers (u_id, lname, fname, mname, email, phone, teach_level, year_level, section, program) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isssssssss", $u_id, $lname, $fname, $mname, $email, $phone, $teach_level, $year_level, $section, $program);
+        
+        if ($stmt->execute()) {
+            // Redirect back to the teacher list page after successful insertion
+            header("Location: teacher.php");
+            exit();
+        } else {
+            echo "Error inserting teacher: " . $stmt->error;
+        }
+
+        $stmt->close();
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error creating user account: " . $stmtUser ->error;
     }
 
-    $stmt->close();
+    $stmtUser ->close();
 }
 
 $conn->close();

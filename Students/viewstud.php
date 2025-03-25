@@ -17,7 +17,8 @@ if (isset($_GET['s_id'])) {
         // Prepare student data for display
         $studentData = [
             's_image' => !empty($student['s_image']) ? htmlspecialchars($student['s_image']) : '',
-            'name' => htmlspecialchars($student['lname'] . ", " . $student['fname'] . " " . $student['mname']),
+            'id_num' => htmlspecialchars($student['id_num']),
+            'name' => htmlspecialchars($student['prefix'] . " " . $student['lname'] . ", " . $student['fname'] . " " . $student['mname']),
             'age' => htmlspecialchars($age),
             'dob' => htmlspecialchars($student['bod']),
             'sex' => htmlspecialchars($student['gender']),
@@ -26,7 +27,7 @@ if (isset($_GET['s_id'])) {
             'email' => htmlspecialchars($student['email']),
             'educ_level' => htmlspecialchars($student['educ_level']),
             'year_level' => htmlspecialchars($student['year_level']),
-            'section' => htmlspecialchars($student['section']), 
+            'section_program' => htmlspecialchars($student['educ_level'] === 'College' ? $student['program'] : $student['section']),
         ];
 
         echo json_encode($studentData);

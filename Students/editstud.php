@@ -2,7 +2,9 @@
 include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $s_id = $_POST['s_id']; 
+    $s_id = $_POST['s_id'];
+    $id_num = $_POST['id_num'];
+    $prefix = $_POST['prefix'];
     $lname = $_POST['lname'];
     $fname = $_POST['fname'];
     $mname = $_POST['mname'];
@@ -14,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $educ_level = $_POST['educ_level'];
     $year_level = $_POST['year_level'];
     $section = $_POST['section'];
+    $program = $_POST['program'];
 
     // Handle image upload
     $default_image = '/SGRMS/profile/circle-user.png'; // Default image path
@@ -26,21 +29,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Move the uploaded file to the target directory
         move_uploaded_file($_FILES['image']['tmp_name'], $target_file);
     } else {
-        // Use the default image if no image was uploaded
-        $target_file = $default_image;
+        // If no new image is uploaded, keep the existing image
+        $sql = "SELECT s_image FROM students WHERE s_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $s_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $existingImage = $result->fetch_assoc()['s_image'];
+        $target_file = $existingImage ? $existingImage : $default_image;
     }
 
     // Update the student record in the database
-    $sql = "UPDATE students SET lname='$lname', fname='$fname', mname='$mname', bod='$bod', gender='$gender', address='$address', mobile_num='$mobile_num', email='$email', educ_level='$educ_level', year_level='$year_level', section='$section', s_image='$target_file' WHERE s_id='$s_id'";
+    $sql = "UPDATE students SET 
+                id_num = ?, 
+                prefix = ?, 
+                lname = ?, 
+                fname = ?, 
+                mname = ?, 
+                bod = ?, 
+                gender = ?, 
+                address = ?, 
+                mobile_num = ?, 
+                email = ?, 
+                educ_level = ?, 
+                year_level = ?, 
+                section = ?, 
+                program = ?, 
+                s_image = ? 
+            WHERE s_id = ?";
 
-    if ($conn->query($sql) === TRUE) {
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssssssssssi", $id_num, $prefix, $lname, $fname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section, $program, $target_file, $s_id);
+
+    if ($stmt->execute()) {
         // Redirect back to students.php after successful update
         header("Location: /SGRMS/Students/students.php");
         exit();
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
 
+    $stmt->close();
     $conn->close();
 }
 ?>

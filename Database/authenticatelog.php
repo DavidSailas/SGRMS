@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the query to prevent SQL injection
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    if(!$stmt){
+    if (!$stmt) {
         $_SESSION['error_username'] = "Database error: " . $conn->error;
         header("Location: index.php");
         exit();
@@ -21,24 +21,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Compare the hashed password (note: md5 is not secure for production)
-        if (md5($password) === $user['password']) { 
+        // Compare the hashed password
+        if (password_verify($password, $user['password'])) { 
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
-            // Redirect based on user role (use absolute paths if needed)
+            // Redirect based on user role
             switch ($user['role']) {
-                case 'Super Admin':
-                    header("Location: /SGRMS/SuperAdmin/superadmin.php");
+                case 'Head Guidance':
+                    header("Location: /SGRMS/SuperAdmin/superadmin.php"); 
                     break;
-                case 'Admin':
-                    header("Location: /SGRMS/admin.php");
+                case 'Guidance Counselor':
+                    header("Location: /SGRMS/guidance.php"); 
                     break;
-                case 'Super User':
-                    header("Location: /SGRMS/superuser.php");
-                    break;
-                case 'User':
-                    header("Location: /SGRMS/user.php");
+                case 'Teacher':
+                    header("Location: /SGRMS/teacher.php"); 
                     break;
                 default:
                     header("Location: /SGRMS/index.php");
@@ -53,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         // User not found: set error for username field
-        $_SESSION['error_username'] = "User not found!";
+        $_SESSION['error_username'] = "User  not found!";
         header("Location: /SGRMS/Login/index.php");
         exit();
     }
