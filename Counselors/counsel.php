@@ -1,54 +1,5 @@
 <?php
     include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
-
-        // Initialize variables
-        $totalCounselors = 0;
-        $elementaryCounselors = 0;
-        $highSchoolCounselors = 0;
-        $collegeCounselors = 0;
-
-        // Query to get total counselors
-        $sql = "SELECT COUNT(*) as total FROM counselors";
-        $result = $conn->query($sql);
-        if ($result) {
-            $row = $result->fetch_assoc();
-            $totalCounselors = $row['total'];
-        }
-
-        // Query to get the count of counselors by level
-        $sqlElementary = "SELECT COUNT(*) as total FROM counselors WHERE c_level = 'Elementary'";
-        $resultElementary = $conn->query($sqlElementary);
-        if ($resultElementary) {
-            $row = $resultElementary->fetch_assoc();
-            $elementaryCounselors = $row['total'];
-        }
-
-        $sqlHighSchool = "SELECT COUNT(*) as total FROM counselors WHERE c_level = 'HighSchool'";
-        $resultHighSchool = $conn->query($sqlHighSchool);
-        if ($resultHighSchool) {
-            $row = $resultHighSchool->fetch_assoc();
-            $highSchoolCounselors = $row['total'];
-        }
-
-        $sqlCollege = "SELECT COUNT(*) as total FROM counselors WHERE c_level = 'College'";
-        $resultCollege = $conn->query($sqlCollege);
-        if ($resultCollege) {
-            $row = $resultCollege->fetch_assoc();
-            $collegeCounselors = $row['total'];
-        }
-/*
-        // After adding a new counselor
-        $activity = "Added a new counselor: {$counselor_name}"; // Customize this message
-        $conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
-
-        // After updating a counselor
-        $activity = "Updated counselor ID: {$c_id}"; // Customize this message
-        $conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
-
-        // After deleting a counselor
-        $activity = "Deleted counselor ID: {$c_id}"; // Customize this message
-        $conn->query("INSERT INTO activity_logs (activity, user_id) VALUES ('$activity', '{$_SESSION['user_id']}')");
-*/
 ?>
 
 <!DOCTYPE html>
@@ -78,163 +29,166 @@
             display: block;
         }
 
+        .profiles-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .profile-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            width: 200px;
+        }
+        .profile-box img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 500px; /* Max width for the modal */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
-
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <h1>SGRMS</h1>
+        <ul>
+            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
+            <li class="has-submenu">
+                <a href="#" id="profiling-link">Profiling</a>
+                <ul class="submenu" id="profiling-submenu">
+                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
+                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
+                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
+                </ul>
+            </li>
+            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
+            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </aside>
     <script>
-        function searchCounselors() {
-            var input = document.getElementById("search").value.toLowerCase();
-            var table = document.querySelector("table tbody");
-            var rows = table.querySelectorAll("tr");
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
 
-            rows.forEach(row => {
-                var name = row.cells[0].textContent.toLowerCase();
-                var email = row.cells[1].textContent.toLowerCase();
-                if (name.includes(input) || email.includes(input)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
                 }
             });
-        }
-        function confirmDelete() {
-            return confirm("Are you sure you want to delete this counselor?");
-        }
-
+        });
     </script>
-    </head>
-    <body>
-    <div class="container">
-    <aside class="sidebar">
-            <h1>SGRMS</h1>
-            <ul>
-                <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
-                <li class="has-submenu">
-                    <a href="#" id="profiling-link">Profiling</a>
-                    <ul class="submenu" id="profiling-submenu">
-                        <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
-                        <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
-                        <li><a href="/SGRMS/Students/students.php">Students</a></li>
-                    </ul>
-                </li>
-                <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
-                <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </aside>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const profilingLink = document.getElementById("profiling-link");
-                const profilingSubmenu = document.getElementById("profiling-submenu");
 
-                profilingLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    profilingSubmenu.classList.toggle("active");
-                });
+    <div class="content">
+        <h2>Manage Counselors</h2>
+        <?php
+            $sql = "SELECT c.c_id, c.lname, c.fname, c.mname, c.contact_num, c.email, c.c_level, c.c_image, 
+                            u.username, u.password 
+                    FROM counselors c
+                    JOIN users u 
+                    ON c.u_id = u.u_id"; 
 
-                document.addEventListener("click", function (event) {
-                    if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
-                        profilingSubmenu.classList.remove("active");
-                    }
-                });
-            });
-        </script>
-
-        <main class="wrapper">
-        <div class="card">
-            <section class="dashboard-overview">
-                <div class="stats">
-                    <div class="stat-box1">
-                        <h2>Total Counselors</h2>
-                        <p><?php echo $totalCounselors; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h2>Elementary Counselors</h2>
-                        <p><?php echo $elementaryCounselors; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h2>High School Counselors</h2>
-                        <p><?php echo $highSchoolCounselors; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h2>College Counselors</h2>
-                        <p><?php echo $collegeCounselors; ?></p>
-                    </div>
-                </div>
-            </section>
-
-                <section class="student-list">
-                <div class="search-flex">
-                    <h2>Manage Counselors</h2>                  
-                    <div class="search-bar">
-                        <input type="text" id="search" placeholder="Search by name or email" onkeyup="searchCounselors()">                     
-                        <select id="level" name="level" onchange="filterCounselors()">
-                                <option value="">All</option>
-                                <option value="Elementary">Elementary</option>
-                                <option value="High School">High School</option>
-                                <option value="College">College</option>
-                        </select>
-                    </div>
-                    <a href="addadmin.php" class="btn btn-add">Add Counselor</a>
-                </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Department</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="counselTableBody">
-                            <?php
-                                $sql = "SELECT * FROM counselors";
-                                $result = $conn->query($sql);
-
-                                if (!$result) {
-                                    die("<tr><td colspan='5'>Query failed: " . $conn->error . "</td></tr>");
-                                }
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>
-                                            <td>".$row['lname'].", ".$row['fname']." ".$row['mname']."</td>
-                                            <td>".$row['email']."</td>
-                                            <td>".$row['contact_num']."</td>
-                                            <td>".$row['c_level']."</td>
-                                            <td class='actions'>
-                                                <a href='viewcounsel.php?c_id=".$row['c_id']."' class='btn btn-view'>View</a>
-                                                <a href='editadmin.php?c_id=".$row['c_id']."' class='btn btn-edit'>Edit</a>
-                                                <a href='deleteadmin.php?c_id=".$row['c_id']."' class='btn btn-delete' onclick='return confirmDelete();'>Delete</a>
-                                            </td>
-                                        </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='5'>No counselors found</td></tr>";
-                                }
-                            ?>
-                        </tbody>
-                    </table>
-                </section>
-            </div>
-        </main>
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                echo '<div class="profiles-container">';
+                while ($row = $result->fetch_assoc()) {
+                    $fullName = $row['lname'] . ', ' . $row['fname'] . ' ' . $row['mname'];
+                    echo '<div class="profile-box" onclick="openModal(\'' . addslashes($row['c_image']) . '\', \'' . addslashes($fullName) . '\', \'' . addslashes($row['contact_num']) . '\', \'' . addslashes($row['email']) . '\', \'' . addslashes($row['c_level']) . '\', \'' . addslashes($row['username']) . '\')">';
+                    echo '<img src="' . htmlspecialchars($row['c_image']) . '" alt="Profile Picture" />';
+                    echo '<h2>' . htmlspecialchars($fullName) . '</h2>';
+                    echo '</div>';
+                }
+                echo '</div>';
+            } else {
+                echo '<p>No counselors found.</p>';
+            }
+            $conn->close();
+        ?>
     </div>
-    <script>
-    function updateTable() {
-        var search = document.getElementById('search').value;
-        var filter = document.getElementById('level').value; // Ensure this matches the select element's ID
-        var url = "searchcounsel.php?search=" + encodeURIComponent(search) + "&filter_educ=" + encodeURIComponent(filter);
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('counselTableBody').innerHTML = data;
-            })
-            .catch(error => console.error('Error:', error));
+</div>
+
+<!-- Modal -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalPicture" src="" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
+        <h2 id="modalName"></h2>
+        <p><strong>Contact No.:</strong> <span id="modalContact"></span></p>
+        <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+        <p><strong>Counselor Level:</strong> <span id="modalLevel"></span></p>
+        <p><strong>Username:</strong> <span id="modalUsername"></span></p>
+        <p><strong>Password:</strong> ***********</p>
+    </div>
+</div>
+
+<script>
+    function openModal(picture, name, contact, email, level, username) {
+        document.getElementById('modalPicture').src = picture;
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalContact').innerText = contact;
+        document.getElementById('modalEmail').innerText = email;
+        document.getElementById('modalLevel').innerText = level;
+        document.getElementById('modalUsername').innerText = username;
+        document.getElementById('profileModal').style.display = "block";
     }
-    
-    document.getElementById('search').addEventListener('keyup', updateTable);
-    document.getElementById('level').addEventListener('change', updateTable);
+
+    function closeModal() {
+        document.getElementById('profileModal').style.display = "none";
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('profileModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
 </script>
+
 </body>
 </html>

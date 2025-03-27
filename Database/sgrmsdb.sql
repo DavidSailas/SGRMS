@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 02:01 AM
+-- Generation Time: Mar 27, 2025 at 10:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,25 +75,25 @@ INSERT INTO `case_records` (`case_id`, `student_name`, `academic_level`, `grade_
 --
 
 CREATE TABLE `counselors` (
-  `c_id` int(50) NOT NULL,
+  `c_id` int(11) NOT NULL,
+  `u_id` int(11) NOT NULL,
   `lname` varchar(50) NOT NULL,
   `fname` varchar(50) NOT NULL,
-  `mname` varchar(50) NOT NULL,
-  `contact_num` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `c_level` varchar(50) NOT NULL
+  `mname` varchar(50) DEFAULT NULL,
+  `contact_num` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `c_level` varchar(20) NOT NULL,
+  `c_image` varchar(225) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `counselors`
 --
 
-INSERT INTO `counselors` (`c_id`, `lname`, `fname`, `mname`, `contact_num`, `email`, `c_level`) VALUES
-(1, 'Garth Stark', 'Lawrence Acosta', 'Vera Fischer', '09123456789', 'xyhu@mailinator.com', 'College'),
-(2, 'Aretha Pierce', 'Naomi Ball', 'Cora Weber', '0927542772', 'jojavaz@mailinator.com', 'Elementary'),
-(3, 'Alma Dalton', 'Morgan Holcomb', 'Finn Mccormick', '094618541', 'wuby@mailinator.com', 'Elementary'),
-(4, 'Dustin Tyson', 'Britanney Patel', 'Carter Mcmahon', '0915464125', 'jovatucuwy@mailinator.com', 'Elementary'),
-(5, 'Price Langley', 'Cruz Moore', 'Tatyana Clay', '0915843558745', 'vajanuv@mailinator.com', 'College');
+INSERT INTO `counselors` (`c_id`, `u_id`, `lname`, `fname`, `mname`, `contact_num`, `email`, `c_level`, `c_image`) VALUES
+(1, 18, 'Doe', 'John', 'A.', '09123456789', 'john.doe@gmail.com', 'Elementary', '\'images/john_doe.jpg\''),
+(2, 19, 'Smith', 'Jane', 'B.', '09234567890', 'jane.smith@gmail.com', 'High School', '\'images/jane_smith.jpg\''),
+(3, 20, 'Lee', 'Michael', 'C.', '09345678901', 'michael.lee@gmail.com', 'College', '\'images/michael_lee.jpg\'');
 
 -- --------------------------------------------------------
 
@@ -268,7 +268,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`u_id`, `username`, `password`, `status`, `role`) VALUES
 (1, 'headguidance', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Head Guidance'),
-(2, 'ashlyn', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
+(2, 'ashlyn', '$2y$10$5P8FL21PgkA5AUCjSH8Rd.pyMKbIzIacuRe0J4zcHSYSRDF8ApmeO', 'Pending', 'Teacher'),
 (3, 'david', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
 (4, 'john', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
 (5, 'emily', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
@@ -283,7 +283,10 @@ INSERT INTO `users` (`u_id`, `username`, `password`, `status`, `role`) VALUES
 (14, 'olivia', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
 (15, 'james', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
 (16, 'emma', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Pending', 'Teacher'),
-(17, 'christine', '$2y$10$Gix.MS4NvKf6swjUboIG6eo6aOfwgORzX0jgmJOHN.my1rfA/jGG6', 'Pending', 'Teacher');
+(17, 'christine', '$2y$10$Gix.MS4NvKf6swjUboIG6eo6aOfwgORzX0jgmJOHN.my1rfA/jGG6', 'Pending', 'Teacher'),
+(18, 'john', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Guidance Counselor'),
+(19, 'jane', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Guidance Counselor'),
+(20, 'michael', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Guidance Counselor');
 
 --
 -- Indexes for dumped tables
@@ -305,7 +308,8 @@ ALTER TABLE `case_records`
 -- Indexes for table `counselors`
 --
 ALTER TABLE `counselors`
-  ADD PRIMARY KEY (`c_id`);
+  ADD PRIMARY KEY (`c_id`),
+  ADD KEY `u_id` (`u_id`);
 
 --
 -- Indexes for table `students`
@@ -347,7 +351,7 @@ ALTER TABLE `case_records`
 -- AUTO_INCREMENT for table `counselors`
 --
 ALTER TABLE `counselors`
-  MODIFY `c_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `c_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -365,11 +369,17 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `u_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `u_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `counselors`
+--
+ALTER TABLE `counselors`
+  ADD CONSTRAINT `counselors_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `users` (`u_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `teachers`

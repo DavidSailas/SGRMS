@@ -39,28 +39,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $target_file = $existingImage ? $existingImage : $default_image;
     }
 
-    // Update the student record in the database
     $sql = "UPDATE students SET 
-                id_num = ?, 
-                prefix = ?, 
-                lname = ?, 
-                fname = ?, 
-                mname = ?, 
-                bod = ?, 
-                gender = ?, 
-                address = ?, 
-                mobile_num = ?, 
-                email = ?, 
-                educ_level = ?, 
-                year_level = ?, 
-                section = ?, 
-                program = ?, 
-                s_image = ? 
-            WHERE s_id = ?";
+    id_num = ?, 
+    prefix = ?, 
+    lname = ?, 
+    fname = ?, 
+    mname = ?, 
+    bod = ?, 
+    gender = ?, 
+    address = ?, 
+    mobile_num = ?, 
+    email = ?, 
+    educ_level = ?, 
+    year_level = ?, 
+    section = ?, 
+    program = ?, 
+    s_image = ? 
+WHERE s_id = ?";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssssssi", $id_num, $prefix, $lname, $fname, $mname, $bod, $gender, $address, $mobile_num, $email, $educ_level, $year_level, $section, $program, $target_file, $s_id);
 
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sssssssssssssssi", 
+    $id_num, $prefix, $lname, $fname, $mname, $bod, $gender, $address, $mobile_num, $email, 
+    $educ_level, $year_level, $section, $program, $target_file, $s_id);
+    
     if ($stmt->execute()) {
         // Redirect back to students.php after successful update
         header("Location: /SGRMS/Students/students.php");
