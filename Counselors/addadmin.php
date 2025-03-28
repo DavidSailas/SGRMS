@@ -8,62 +8,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $contact_num = isset($_POST['contact_num']) ? trim($_POST['contact_num']) : '';
     $c_level = isset($_POST['c_level']) ? trim($_POST['c_level']) : '';
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
-    if (empty($lname) || empty($fname) || empty($email) || empty($contact_num) || empty($c_level)) {
+    if (empty($lname) || empty($fname) || empty($email) || empty($contact_num) || empty($c_level) || empty($username) || empty($password)) {
         die("All fields are required.");
     }
 
-    $sql = "INSERT INTO counselors (lname, fname, mname, email, contact_num, c_level) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssss", $lname, $fname, $mname, $email, $contact_num, $c_level);
+    // Insert into users table
+    $sqlUser  = "INSERT INTO users (username, password) VALUES (?, ?)";
+    $stmtUser  = $conn->prepare($sqlUser );
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Hash the password for security
+    $stmtUser ->bind_param("ss", $username, $hashedPassword);
 
-    if ($stmt->execute()) {
-        echo "Counselor added successfully!";
+    if ($stmtUser ->execute()) {
+        $userId = $stmtUser ->insert_id; // Get the last inserted user ID
+
+        // Insert into counselors table
+        $status = 'Pending'; 
+        $role = 'Guidance Counselor'; 
+        $sqlCounselor = "INSERT INTO counselors (lname, fname, mname, email, contact_num, c_level, u_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmtCounselor = $conn->prepare($sqlCounselor);
+        $stmtCounselor->bind_param("ssssssi", $lname, $fname, $mname, $email, $contact_num, $c_level, $userId);
+
+        if ($stmtCounselor->execute()) {
+            header("Location: counsel.php");
+            exit();
+        } else {
+            echo "Error: " . $stmtCounselor->error;
+        }
+
+        $stmtCounselor->close();
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error: " . $stmtUser ->error;
     }
 
-    $stmt->close();
+    $stmtUser ->close();
 }
 
 $conn->close();
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-    <title>Add Counselor</title>
-</head>
-<body>
-    <div class="container">
-        <h2>Add Counselor</h2>
-        <form action="addadmin.php" method="POST">
-            <label for="lname">Last Name:</label>
-            <input type="text" name="lname" >
-
-            <label for="fname">First Name:</label>
-            <input type="text" name="fname" >
-
-            <label for="mname">Middle Name:</label>
-            <input type="text" name="mname">
-
-            <label for="email">Email:</label>
-            <input type="email" name="email" >
-
-            <label for="contact_num">Phone Number:</label>
-            <input type="text" name="contact_num" >
-
-            <label for="c_level">Department:</label>
-            <select name="c_level" >
-                <option value="">Select Department</option>
-                <option value="Elementary">Elementary</option>
-                <option value="Highschool">Highschool</option>
-                <option value="College">College</option>
-            </select>
-
-            <button type="submit">Submit</button>
-        </form>
-        <a href="counsel.php">Back to Home</a>
-        </div>
-    </div>
-</body>
-</html>
