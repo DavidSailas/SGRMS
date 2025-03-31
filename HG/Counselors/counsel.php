@@ -105,23 +105,40 @@
 </head>
 <body>
 <div class="container">
-    <aside class="sidebar">
-        <h1>SGRMS</h1>
-        <ul>
-            <li><a href="/SGRMS/SuperAdmin/superadmin.php">Home</a></li>
-            <li class="has-submenu">
-                <a href="#" id="profiling-link">Profiling</a>
-                <ul class="submenu" id="profiling-submenu">
-                    <li><a href="/SGRMS/Counselors/counsel.php">Counselors</a></li>
-                    <li><a href="/SGRMS/Teachers/teacher.php">Teachers</a></li>
-                    <li><a href="/SGRMS/Students/students.php">Students</a></li>
-                </ul>
-            </li>
-            <li><a href="/SGRMS/Reports/case.php">Reports</a></li>
-            <li><a href="/SGRMS/Appointment/schedule.php">Appointments</a></li>
-            <li><a href="#">Settings</a></li>
-        </ul>
-    </aside>
+        <aside class="sidebar">
+            <h1>SGRMS</h1>
+            <ul>
+                <li><a href="/SGRMS/HG/SuperAdmin/superadmin.php">Home</a></li>
+                <li class="has-submenu">
+                    <a href="#" id="profiling-link">Profiling</a>
+                    <ul class="submenu" id="profiling-submenu">
+                        <li><a href="/SGRMS/HG/Counselors/counsel.php">Counselors</a></li>
+                        <li><a href="/SGRMS/HG/Teachers/teacher.php">Teachers</a></li>
+                        <li><a href="/SGRMS/HG/Students/students.php">Students</a></li>
+                    </ul>
+                </li>
+                <li><a href="/SGRMS/HG/Reports/case.php">Reports</a></li>
+                <li><a href="/SGRMS/HG/Appointment/schedule.php">Appointments</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </aside>
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilingLink = document.getElementById("profiling-link");
+            const profilingSubmenu = document.getElementById("profiling-submenu");
+
+            profilingLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                profilingSubmenu.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profilingLink.contains(event.target) && !profilingSubmenu.contains(event.target)) {
+                    profilingSubmenu.classList.remove("active");
+                }
+            });
+        });
+    </script>
 
     <div class="content">
         <h2>Manage Counselors</h2>

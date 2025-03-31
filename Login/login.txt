@@ -1,0 +1,76 @@
+document.getElementById('guest-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const invitationCode = document.getElementById('invitation-code').value;
+    // Handle guest access logic here (e.g., fetch bill data using the invitation code)
+    alert(`Guest access granted for invitation code: ${invitationCode}`);
+});
+
+document.getElementById('login-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const userType = document.getElementById('user-type').value;
+    // Handle login logic here (e.g., authenticate user)
+    alert(`Logged in as ${username} (${userType})`);
+});
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="login.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Bill Splitter</h1>
+
+        <div class="form-container">
+            <!-- Registered User Login Section -->
+            <div class="registered-user-login">
+                <h2>Registered User Login</h2>
+                <form id="login-form">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <label for="user-type">User  Type:</label>
+                    <select id="user-type" name="user-type">
+                        <option value="standard">Standard User</option>
+                        <option value="premium">Premium User</option>
+                    </select>
+
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <div class="guest-access-button">
+                <button id="guest-button">Guest Access</button>
+            </div>
+        </div>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="register.html">Register here</a></p>
+        </div>
+    </div>
+
+    <div id="guest-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Guest Access</h2>
+            <p>As a guest, you can view a bill to split via an invitation code.</p>
+            <form id="guest-form">
+                <label for="invitation-code">Enter Invitation Code:</label>
+                <input type="text" id="invitation-code" name="invitation-code" required>
+                <button type="submit">View Bill</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>

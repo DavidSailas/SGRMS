@@ -29,10 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirect based on user role
             switch ($user['role']) {
                 case 'Head Guidance':
-                    header("Location: /SGRMS/SuperAdmin/superadmin.php"); 
+                    header("Location: /SGRMS/HG/SuperAdmin/superadmin.php"); 
                     break;
                 case 'Guidance Counselor':
-                    header("Location: /SGRMS/guidance.php"); 
+                    header("Location: /SGRMS/CG/Admin/admin.php"); 
                     break;
                 case 'Teacher':
                     header("Location: /SGRMS/teacher.php"); 
