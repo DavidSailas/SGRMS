@@ -21,7 +21,7 @@ session_start();
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form action="/SGRMS/Database/authenticatelog.php" method="POST">
+        <form action="../Database/authenticatelog.php" method="POST">
             <div class="input-group">
                 <input type="text" name="username" class="input-box" placeholder="Username"
                        value="<?php echo isset($_SESSION['old_username']) ? htmlspecialchars($_SESSION['old_username']) : ''; ?>">

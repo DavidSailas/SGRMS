@@ -1,12 +1,23 @@
-table {
+/* Scrollable table wrapper */
+.table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
+/* Table style remains */
+.table-container table {
     width: 100%;
     border-collapse: collapse;
 }
+
 table th, table td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
 }
+
+/* Buttons */
 .btn {
     padding: 8px 12px;
     border-radius: 5px;
@@ -27,6 +38,8 @@ table th, table td {
 .btn-view {
     background: #10b981;
 }
+
+/* Status dot */
 .status-circle {
     display: inline-block;
     width: 12px;
@@ -36,6 +49,8 @@ table th, table td {
 .green {
     background-color: green;
 }
+
+/* Search bar layout */
 .search-flex {
     display: flex;
     justify-content: space-between;
@@ -43,7 +58,8 @@ table th, table td {
     margin-bottom: 15px;
     margin-top: 25px;
 }
-.search-bar input, .search-bar select {
+.search-bar input,
+.search-bar select {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
