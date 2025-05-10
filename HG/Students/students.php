@@ -63,53 +63,54 @@ include '../../Database/db_connect.php';
         <button class="btn btn-add" onclick="openAddModal()">Add Student</button>
     </div>
 
-    <!-- ✅ Table scroll wrapper -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Educational Level</th>
-                    <th>Section/Program</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="studentTableBody">
-                <?php
-                    $sql = "SELECT s_id, id_num, prefix, lname, fname, mname, bod, educ_level, section, program FROM students";
-                    $result = $conn->query($sql);
+            <!-- ✅ Table scroll wrapper -->
+            <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Educational Level</th>
+                        <th>Section/Program</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <?php
+                        $sql = "SELECT s_id, id_num, prefix, lname, fname, mname, bod, educ_level, 
+                        section, program, previous_school, last_year_school FROM students";
+                        $result = $conn->query($sql);
 
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $bod = $row['bod'];
-                            $birthdate = new DateTime($bod);
-                            $today = new DateTime();
-                            $age = $today->diff($birthdate)->y;
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $bod = $row['bod'];
+                                $birthdate = new DateTime($bod);
+                                $today = new DateTime();
+                                $age = $today->diff($birthdate)->y;
 
-                            echo "<tr>                                           
-                                <td><span class='status-circle green'></span></td>
-                                <td>".$row['id_num']."</td>
-                                <td>".$row['prefix']." ".$row['lname'].", ".$row['fname']." ".$row['mname']."</td>
-                                <td>".$age."</td>
-                                <td>".$row['educ_level']."</td>
-                                <td>".(!empty($row['section']) ? $row['section'] : $row['program'])."</td>
-                                <td>
-                                    <button class='btn btn-view' onclick='viewStudent(".$row['s_id'].")'>View</button>
-                                    <button class='btn btn-edit' onclick='openEditModal(".$row['s_id'].")'>Edit</button>
-                                    <button class='btn btn-delete' onclick='openDeleteConfirmationModal(".$row['s_id'].")'>Delete</button>
-                                </td>
-                            </tr>";
+                                echo "<tr>                                           
+                                    <td><span class='status-circle green'></span></td>
+                                    <td>".$row['id_num']."</td>
+                                    <td>".$row['prefix']." ".$row['lname'].", ".$row['fname']." ".$row['mname']."</td>
+                                    <td>".$age."</td>
+                                    <td>".$row['educ_level']."</td>
+                                    <td>".(!empty($row['section']) ? $row['section'] : $row['program'])."</td>
+                                    <td>
+                                        <button class='btn btn-view' onclick='viewStudent(".$row['s_id'].")'>View</button>
+                                        <button class='btn btn-edit' onclick='openEditModal(".$row['s_id'].")'>Edit</button>
+                                        <button class='btn btn-delete' onclick='openDeleteConfirmationModal(".$row['s_id'].")'>Delete</button>
+                                    </td>
+                                </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='7'>No students found</td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='7'>No students found</td></tr>";
-                    }
-                ?>
-            </tbody>
-        </table>
-    </div>
+                    ?>
+                </tbody>
+            </table>
+        </div>
 </section>
 
             </div>

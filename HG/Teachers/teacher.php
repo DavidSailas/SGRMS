@@ -40,7 +40,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                 <li><a href="/SGRMS/HG/SuperAdmin/superadmin.php">Home</a></li>
                 <li class="has-submenu">
                     <a href="#" id="profiling-link">Profiling</a>
-                    <ul class="submenu" id="profiling-submenu">
+                    <ul class="submenu <?php echo (basename($_SERVER['PHP_SELF']) === 'teacher.php' || basename($_SERVER['PHP_SELF']) === 'students.php' || basename($_SERVER['PHP_SELF']) === 'counsel.php') ? 'active' : ''; ?>" id="profiling-submenu">
                         <li><a href="/SGRMS/HG/Counselors/counsel.php">Counselors</a></li>
                         <li><a href="/SGRMS/HG/Teachers/teacher.php">Teachers</a></li>
                         <li><a href="/SGRMS/HG/Students/students.php">Students</a></li>
@@ -85,58 +85,61 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
                     </div>
                     <button class="btn btn-add" onclick="openAddModal()">Add Teacher</button>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Department</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="teacherTableBody">
-                        <?php
-                            $search = isset($_GET['search']) ? $_GET['search'] : '';
-                            $filter_educ = isset($_GET['filter_educ']) ? $_GET['filter_educ'] : '';
-                            
-                            $sql = "SELECT * FROM teachers WHERE (t_id LIKE ? OR fname LIKE ? OR lname LIKE ? )";
-                            if (!empty($filter_educ)) {
-                                $sql .= " AND teach_level = ?";
-                            }
-                            
-                            $stmt = $conn->prepare($sql);
-                            if (!empty($filter_educ)) {
-                                $searchTerm = "%$search%";
-                                $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $filter_educ);
-                            } else {
-                                $searchTerm = "%$search%";
-                                $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
-                            }
-                            
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>
-                                        <td>".htmlspecialchars($row['lname']).", ".htmlspecialchars($row['fname'])." ".htmlspecialchars($row['mname'])."</td>
-                                        <td>".htmlspecialchars($row['email'])."</td>
-                                        <td>".htmlspecialchars($row['phone'])."</td>
-                                        <td>".htmlspecialchars($row['teach_level'])."</td>
-                                        <td class='actions'>
-                                            <button class='btn btn-view' onclick='viewTeacher(".$row['t_id'].")'>View</button>
-                                            <button class='btn btn-edit' onclick='openEditModal(".$row['t_id'].")'>Edit</button>
-                                            <a href='deleteteach.php?t_id=".$row['t_id']."' class='btn btn-delete' onclick='return confirm(\"Are you sure you want to delete this teacher?\")'>Delete</a>
-                                        </td>
-                                    </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No teachers found</td></tr>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
+<!-- ✅ Table scroll wrapper -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="teacherTableBody">
+            <?php
+                $search = isset($_GET['search']) ? $_GET['search'] : '';
+                $filter_educ = isset($_GET['filter_educ']) ? $_GET['filter_educ'] : '';
+                
+                $sql = "SELECT * FROM teachers WHERE (t_id LIKE ? OR fname LIKE ? OR lname LIKE ? )";
+                if (!empty($filter_educ)) {
+                    $sql .= " AND teach_level = ?";
+                }
+                
+                $stmt = $conn->prepare($sql);
+                if (!empty($filter_educ)) {
+                    $searchTerm = "%$search%";
+                    $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $filter_educ);
+                } else {
+                    $searchTerm = "%$search%";
+                    $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+                }
+                
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                            <td>".htmlspecialchars($row['lname']).", ".htmlspecialchars($row['fname'])." ".htmlspecialchars($row['mname'])."</td>
+                            <td>".htmlspecialchars($row['email'])."</td>
+                            <td>".htmlspecialchars($row['phone'])."</td>
+                            <td>".htmlspecialchars($row['teach_level'])."</td>
+                            <td class='actions'>
+                                <button class='btn btn-view' onclick='viewTeacher(".$row['t_id'].")'>View</button>
+                                <button class='btn btn-edit' onclick='openEditModal(".$row['t_id'].")'>Edit</button>
+                                <a href='deleteteach.php?t_id=".$row['t_id']."' class='btn btn-delete' onclick='return confirm(\"Are you sure you want to delete this teacher?\")'>Delete</a>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No teachers found</td></tr>";
+                }
+            ?>
+        </tbody>
+    </table>
+</div>
             </section>
         </div>
     </main>

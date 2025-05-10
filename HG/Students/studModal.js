@@ -1,5 +1,16 @@
 let studentIdToDelete = null; 
 
+function fetchStudentId() {
+    fetch("getstudNum.php")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("id_num").value = data;
+        })
+        .catch(error => {
+            console.error("Error fetching student ID:", error);
+        });
+}
+
 function openAddModal() {
     document.getElementById("addStudentModal").style.display = "block";
     fetchStudentId(); // Fetch ID when opening the modal
@@ -32,14 +43,17 @@ function openEditModal(studentId) {
 
                 // Set the section and program fields based on the educational level
                 if (data.educ_level === 'College') {
-                    document.getElementById('edit_program').value = data.program; // Set program value
-                    document.getElementById('edit_programField').style.display = 'block'; // Show program field
-                    document.getElementById('edit_sectionField').style.display = 'none'; // Hide section field
+                    document.getElementById('edit_program').value = data.program; 
+                    document.getElementById('edit_programField').style.display = 'block'; 
+                    document.getElementById('edit_sectionField').style.display = 'none'; 
                 } else {
-                    document.getElementById('edit_section').value = data.section; // Set section value
-                    document.getElementById('edit_programField').style.display = 'none'; // Hide program field
-                    document.getElementById('edit_sectionField').style.display = 'block'; // Show section field
+                    document.getElementById('edit_section').value = data.section; 
+                    document.getElementById('edit_programField').style.display = 'none'; 
+                    document.getElementById('edit_sectionField').style.display = 'block';
                 }
+
+                document.getElementById('prev_school').value = data.prev_school;
+                document.getElementById('last_year_attended').value = data.last_year_attended;
 
                 const editStudentImage = document.getElementById('edit_studentImage');
                 editStudentImage.src = data.s_image ? data.s_image : '/SGRMS/profile/circle-user.png'; 
@@ -85,19 +99,33 @@ function viewStudent(studentId) {
 
 // Delete confirm
 function openDeleteConfirmationModal(studentId) {
-    studentIdToDelete = studentId; 
-    document.getElementById('deleteConfirmationModal').style.display = 'block';
+    studentIdToDelete = studentId; // Store the student ID to delete
+    console.log("Student ID to delete:", studentIdToDelete); // Log the ID
+    document.getElementById("deleteConfirmationModal").style.display = "block"; // Show the modal
 }
 
 function closeDeleteConfirmationModal() {
-    document.getElementById('deleteConfirmationModal').style.display = 'none';
+    document.getElementById("deleteConfirmationModal").style.display = "none"; // Hide the modal
 }
-
-document.getElementById('confirmDeleteButton').onclick = function() {
+function confirmDelete() {
     if (studentIdToDelete) {
-        window.location.href = `deletestud.php?s_id=${studentIdToDelete}`;
+        // Send a request to delete the student
+        fetch(`deletestud.php?s_id=${studentIdToDelete}`, {
+            method: 'DELETE' // Use DELETE method
+        })
+        .then(response => {
+            if (response.ok) {
+                // Successfully deleted
+                alert("Student deleted successfully.");
+                location.reload(); // Reload the page to update the student list
+            } else {
+                alert("Error deleting student.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
-};
+    closeDeleteConfirmationModal(); // Close the modal
+}
 
 // Close Add Modal
 function closeAddModal() {

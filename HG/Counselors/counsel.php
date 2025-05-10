@@ -111,7 +111,7 @@
                 <li><a href="/SGRMS/HG/SuperAdmin/superadmin.php">Home</a></li>
                 <li class="has-submenu">
                     <a href="#" id="profiling-link">Profiling</a>
-                    <ul class="submenu" id="profiling-submenu">
+                    <ul class="submenu <?php echo (basename($_SERVER['PHP_SELF']) === 'teacher.php' || basename($_SERVER['PHP_SELF']) === 'students.php' || basename($_SERVER['PHP_SELF']) === 'counsel.php') ? 'active' : ''; ?>" id="profiling-submenu">
                         <li><a href="/SGRMS/HG/Counselors/counsel.php">Counselors</a></li>
                         <li><a href="/SGRMS/HG/Teachers/teacher.php">Teachers</a></li>
                         <li><a href="/SGRMS/HG/Students/students.php">Students</a></li>

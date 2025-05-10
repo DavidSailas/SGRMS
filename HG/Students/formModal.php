@@ -4,26 +4,28 @@
         <span class="close" onclick="closeAddModal()">&times;</span>
         <h2 id="addModalTitle">Add Student</h2>
         <form id="addStudentForm" method="POST" action="addstud.php" enctype="multipart/form-data">
-            <label for="id_num">Student ID:</label>
-            <span id="id_num_display"><i>Loading...</i></span> 
+           
             <input type="hidden" id="id_num" name="id_num">
+                
+            <div class="name-flex">
+                <label for="prefix">Prefix:</label>
+                <input type="text" id="prefix" name="prefix">
+                
+                <label for="lname">Last Name:</label>
+                <input type="text" id="lname" name="lname">
+
+                <label for="fname">First Name:</label>
+                <input type="text" id="fname" name="fname">
+
+                <label for="mname">Middle Name:</label>
+                <input type="text" id="mname" name="mname">
+            </div>
+           
             
-            <label for="prefix">Prefix:</label>
-            <input type="text" id="prefix" name="prefix">
-            
-            <label for="lname">Last Name:</label>
-            <input type="text" id="lname" name="lname">
-
-            <label for="fname">First Name:</label>
-            <input type="text" id="fname" name="fname">
-
-            <label for="mname">Middle Name:</label>
-            <input type="text" id="mname" name="mname">
-
             <label for="bod">Birthdate:</label>
             <input type="date" id="bod" name="bod">
 
-            <label for="gender">Gender:</label>
+            <label for="gender">Sex:</label>
             <select id="gender" name="gender">
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -67,6 +69,12 @@
                 <input type="text" id="section" name="section">
             </div>
 
+            <label for="previous_school">Previous School:</label>
+            <input type="text" id="previous_school" name="previous_school">
+
+            <label for="last_year_school">Last School Year Attended:</label>
+            <input type="text" id="last_year_school" name="last_year_school">
+            
             <label for="image">Image:</label>
             <input type="file" id="image" name="image" accept="image/*">
             <img id="studentImage" src="/SGRMS/profile/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
@@ -242,9 +250,9 @@
     <div class="modal-content">
         <span class="close" onclick="closeDeleteConfirmationModal()">&times;</span>
         <h2>Confirm Deletion</h2>
-        <p>Are you sure you want to delete this student record?</p>
-        <button id="confirmDeleteButton">Delete</button>
-        <button onclick="closeDeleteConfirmationModal()">Cancel</button>
+        <p>Are you sure you want to delete this student?</p>
+        <button id="confirmDeleteButton" class="btn btn-delete" onclick="confirmDelete()">Delete</button>
+        <button class="btn btn-cancel" onclick="closeDeleteConfirmationModal()">Cancel</button>
     </div>
 </div>
 
