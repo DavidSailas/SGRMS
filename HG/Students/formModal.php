@@ -4,9 +4,11 @@
         <span class="close" onclick="closeAddModal()">&times;</span>
         <h2 id="addModalTitle">Add Student</h2>
         <form id="addStudentForm" method="POST" action="addstud.php" enctype="multipart/form-data">
-           
-            <input type="hidden" id="id_num" name="id_num">
-                
+                        
+        <label for="id_num_display">Student ID:</label>
+        <span id="id_num_display">Loading...</span>
+        <input type="hidden" id="id_num" name="id_num">
+
             <div class="name-flex">
                 <label for="prefix">Prefix:</label>
                 <input type="text" id="prefix" name="prefix">
@@ -101,7 +103,7 @@
             <label for="edit_lname">Last Name:</label>
             <input type="text" id="edit_lname" name="lname">
 
-            <label for="edit_fname">First Name:</label>
+            <label for="edit_fname">First Name:</label> 
             <input type="text" id="edit_fname" name="fname">
 
             <label for="edit_mname">Middle Name:</label>
@@ -155,6 +157,12 @@
                 <input type="text" id="edit_section" name="section">
             </div>
 
+            <label for="edit_previous_school">Previous School:</label>
+            <input type="text" id="edit_previous_school" name="previous_school">
+
+            <label for="edit_last_year_school">Last Year Attended:</label>
+            <input type="text" id="edit_last_year_school" name="last_year_school">
+
             <label for="edit_image">Image:</label>
             <input type="file" id="edit_image" name="image" accept="image/*">
             <img id="edit_studentImage" src="/SGRMS/profile/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
@@ -201,21 +209,27 @@
     function closeModal() {
         document.getElementById("studentModal").style.display = "none";
     }
-
-    function fetchStudentId() {
-        const idNumDisplay = document.getElementById('id_num_display');
-        const idNumHidden = document.getElementById('id_num');
-
-        fetch('/SGRMS/Students/getstudNum.php')
-            .then(response => response.text())
-            .then(data => {
-                const currentYear = new Date().getFullYear().toString().slice(-2); 
-                const idNum = `SCC-${currentYear}-${data}`; // Format: SCC-25-00000001
-                idNumDisplay.textContent = idNum; 
-                idNumHidden.value = idNum; 
-            })
-            .catch(error => console.error('Error:', error));
-    }
+function fetchStudentId() {
+    const idNumDisplay = document.getElementById('id_num_display');
+    const idNumHidden = document.getElementById('id_num');
+fetch('/SGRMS/HG/Students/getstudNum.php')  
+    .then(response => {
+        console.log('Response status:', response.status); // Log the response status
+        if (!response.ok) {
+            throw new Error('Failed to fetch student ID');
+        }
+        return response.text();
+    })
+    .then(data => {
+        console.log('Fetched data:', data); // Log the fetched data
+        idNumDisplay.textContent = data; // Display the ID
+        idNumHidden.value = data; // Set the hidden input value
+    })
+    .catch(error => {
+        console.error('Error fetching student ID:', error);
+        idNumDisplay.textContent = 'Error generating ID';
+    });
+}
 </script>
 
 

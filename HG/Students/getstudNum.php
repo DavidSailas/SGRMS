@@ -19,7 +19,10 @@ if ($result && $result->num_rows > 0) {
     $nextNumber = '00000001';
 }
 
-$fullId = 'SCC-25-' . $nextNumber;
+// Generate the full ID
+$currentYear = date('y'); // Get the last two digits of the current year
+$fullId = "SCC-$currentYear-$nextNumber";
+
 echo $fullId;
 
 $conn->close();

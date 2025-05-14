@@ -1,16 +1,5 @@
 let studentIdToDelete = null; 
 
-function fetchStudentId() {
-    fetch("getstudNum.php")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("id_num").value = data;
-        })
-        .catch(error => {
-            console.error("Error fetching student ID:", error);
-        });
-}
-
 function openAddModal() {
     document.getElementById("addStudentModal").style.display = "block";
     fetchStudentId(); // Fetch ID when opening the modal
@@ -18,6 +7,12 @@ function openAddModal() {
 
 // Open Edit Student Modal
 function openEditModal(studentId) {
+    console.log("Opening edit modal for student ID:", studentId);
+    const modal = document.getElementById("editStudentModal");
+    if (!modal) {
+        console.error("Edit modal not found");
+        return;
+    }
     fetch(`fetchstud.php?s_id=${studentId}`)
         .then(response => response.json())
         .then(data => {
@@ -52,14 +47,15 @@ function openEditModal(studentId) {
                     document.getElementById('edit_sectionField').style.display = 'block';
                 }
 
-                document.getElementById('prev_school').value = data.prev_school;
-                document.getElementById('last_year_attended').value = data.last_year_attended;
+                document.getElementById('edit_previous_school').value = data.previous_school;
+                document.getElementById('edit_last_year_school').value = data.last_year_school;
 
                 const editStudentImage = document.getElementById('edit_studentImage');
                 editStudentImage.src = data.s_image ? data.s_image : '/SGRMS/profile/circle-user.png'; 
                 editStudentImage.style.display = 'block'; 
 
                 document.getElementById("editStudentModal").style.display = "block";
+                modal.style.display = "block";
             } else {
                 console.error(data.error); // Log the error if student not found
                 alert("Error: " + data.error); // Alert the user

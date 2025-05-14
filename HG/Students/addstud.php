@@ -3,7 +3,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/SGRMS/Database/db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
-    $id_num = $_POST['id_num'];
+    $id_num = $_POST['id_num']; // Ensure this is fetched from the form
     $prefix = $_POST['prefix'];
     $lname = $_POST['lname'];
     $fname = $_POST['fname'];
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             '$program', '$target_file', '$previous_school', '$last_year_school')";
 
     if ($conn->query($sql) === TRUE) {
-        // Redirect back to students.php after successful insertion
-        header("Location: /SGRMS/Students/students.php");
+       
+        header("Location: /SGRMS/HG/Students/students.php");
         exit();
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
