@@ -13,11 +13,101 @@ $activityResult = $conn->query($activitySql);
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/SGRMS/CSS/style.css">
     <link rel="stylesheet" href="/SGRMS/CSS/hgadmin.css">
-    <link rel="stylesheet" href="/SGRMS/CSS/hg.css">
+    <link rel="stylesheet" href="/SGRMS/CSS/hg.css"> 
     <script src="/SGRMS/HG/SuperAdmin/hgscript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+         body {
+            animation: fadeIn 0.8s ease-in-out;
+        }
 
+.analytics,
+.appointment,
+.activities
+{
+    background: #f8f9fa;
+    color: #212529;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark mode overrides */
+body.dark .analytics,
+body.dark .appointment,
+body.dark .activities,
+body.dark .stat-box,
+body.dark .stat-box1 {
+    background: #1e1e2f;
+    color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .analytics h2,
+body.dark .appointment h2,
+body.dark .activities h2 {
+    color: #9cd4ff;
+}
+
+body.dark nav,
+body.dark nav .form-input input,
+body.dark nav .form-input .search-btn {
+    background-color: #1e1e2f;
+    color: #f1f1f1;
+}
+
+body.dark nav .form-input input::placeholder {
+    color: #ccc;
+}
+
+/* Optional: Adjust sidebar and breadcrumb for dark mode */
+body.dark #sidebar {
+    background-color: #181825;
+    color: #f1f1f1;
+}
+
+body.dark .head-title h1,
+body.dark .breadcrumb a,
+body.dark .breadcrumb i {
+    color: #ddd;
+}
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-box, .stat-box1, .analytics, .appointment, .activities {
+            animation: popIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .stat-box:nth-child(1) { animation-delay: 0.2s; }
+        .stat-box:nth-child(2) { animation-delay: 0.4s; }
+        .stat-box:nth-child(3) { animation-delay: 0.6s; }
+        .stat-box:nth-child(4) { animation-delay: 0.8s; }
+
+        .analytics { animation-delay: 1s; }
+        .appointment { animation-delay: 1.2s; }
+        .activities { animation-delay: 1.4s; }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .stat-box, .stat-box1 {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-box:hover, .stat-box1:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
         .box-page {
             display: grid;
             grid-template-columns: 2fr 1fr; 
@@ -72,28 +162,37 @@ $activityResult = $conn->query($activitySql);
             font-weight: bold;
         }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar ul li {
+        nav .notification {
             position: relative;
+            margin-left: 20px;
         }
 
-        /* Base style for submenu (hidden by default) */
-        .submenu {
-            display: none;
-            padding-left: 40px;
-            flex-direction: column;
+        nav .notification .num {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
         }
 
-        /* Show submenu when active */
-        .submenu.active {
-            display: flex;
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
-
 
     </style>
 </head>
@@ -112,31 +211,16 @@ $activityResult = $conn->query($activitySql);
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li>
+        <li class="dropdown" id="profiling-dropdown">
             <a href="#" id="profiling-link">
                 <i class='bx bxs-user'></i>
                 <span class="text">Profiling</span>
-                <i class='bx bx-chevron-down' style="margin-left:auto;"></i> <!-- Optional dropdown arrow -->
+                <i class='bx bx-chevron-down' style="margin-left:auto;"></i> 
             </a>
-            <ul class="submenu" id="profiling-submenu">
-                <li>
-                    <a href="/SGRMS/HG/Counselors/counsel.php">
-                        <i class='bx bxs-user-voice'></i> <!-- Counselors icon -->
-                        <span class="text">Counselors</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/SGRMS/HG/Teachers/teacher.php">
-                        <i class='bx bxs-chalkboard'></i> <!-- Teachers icon -->
-                        <span class="text">Teachers</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/SGRMS/HG/Students/students.php">
-                        <i class='bx bxs-graduation'></i> <!-- Students icon -->
-                        <span class="text">Students</span>
-                    </a>
-                </li>
+            <ul class="submenu">
+                <li><a href="/SGRMS/HG/Profiling/counselors.php">Counselors</a></li>
+                <li><a href="/SGRMS/HG/Profiling/teachers.php">Teachers</a></li>
+                <li><a href="/SGRMS/HG/Profiling/students.php">Students</a></li>
             </ul>
         </li>
         <li>
@@ -212,6 +296,16 @@ document.addEventListener("DOMContentLoaded", function () {
         sidebar.classList.toggle('hide');
     });
 
+    // TOGGLE SUBMENU
+    const profilingLink = document.getElementById("profiling-link");
+    const submenu = document.querySelector("#profiling-dropdown .submenu");
+
+    profilingLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        profilingLink.parentElement.classList.toggle("show");
+    });
+
+
     // NAVBAR SEARCH TOGGLE (Mobile)
     const searchButton = document.querySelector('#content nav form .form-input button');
     const searchButtonIcon = searchButton.querySelector('.bx');
@@ -226,21 +320,6 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 searchButtonIcon.classList.replace('bx-x', 'bx-search');
             }
-        }
-    });
-
-    // PROFILING DROPDOWN MENU
-    const profilingToggle = document.getElementById("profiling-link");
-    const profilingDropdown = document.getElementById("profiling-submenu");
-
-    profilingToggle.addEventListener("click", function (event) {
-        event.preventDefault();
-        profilingDropdown.classList.toggle("active");
-    });
-
-    document.addEventListener("click", function (event) {
-        if (!profilingToggle.contains(event.target) && !profilingDropdown.contains(event.target)) {
-            profilingDropdown.classList.remove("active");
         }
     });
 
@@ -317,45 +396,87 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <!-- CHART + UPCOMING + APPOINTMENT -->
     <div class="box-page">
-        <section class="analytics">
-            <h2>Case Report Analytics</h2>
-            <canvas id="caseChart"></canvas>
+    <section class="analytics">
+        <h2>Case Report Analytics</h2>
+        <canvas id="caseChart"></canvas>
 
-            <?php
-                $caseData = array_fill(1, 12, 0);
-                $result = $conn->query("SELECT MONTH(filed_date) AS month, COUNT(*) AS total FROM case_records WHERE filed_date IS NOT NULL GROUP BY MONTH(filed_date)");
-                while ($row = $result->fetch_assoc()) {
-                    $caseData[intval($row['month'])] = $row['total'];
-                }
-            ?>
+        <?php
+            $caseData = array_fill(1, 12, 0);
+            $result = $conn->query("SELECT MONTH(filed_date) AS month, COUNT(*) AS total FROM case_records WHERE filed_date IS NOT NULL GROUP BY MONTH(filed_date)");
+            while ($row = $result->fetch_assoc()) {
+                $caseData[intval($row['month'])] = $row['total'];
+            }
+        ?>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    var ctx = document.getElementById('caseChart').getContext('2d');
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                            datasets: [{
-                                label: 'Number of Cases',
-                                data: <?php echo json_encode(array_values($caseData)); ?>,
-                                borderColor: 'rgba(0, 102, 255, 1)',
-                                backgroundColor: 'rgba(0, 102, 255, 0.2)',
-                                borderWidth: 2,
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: { beginAtZero: true }
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var ctx = document.getElementById('caseChart').getContext('2d');
+                var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(0, 102, 255, 0.5)');
+                gradient.addColorStop(1, 'rgba(0, 102, 255, 0)');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'Number of Cases',
+                            data: <?php echo json_encode(array_values($caseData)); ?>,
+                            borderColor: 'rgba(0, 102, 255, 1)', // Line color
+                            backgroundColor: gradient,  // Gradient fill for the area under the line
+                            pointBackgroundColor: 'rgba(0, 102, 255, 1)', // Color of the data points
+                            pointBorderColor: '#fff', // Border color for points
+                            pointBorderWidth: 2, // Border width for points
+                            pointRadius: 6, // Size of the data points
+                            pointHoverRadius: 8, // Hover radius for points
+                            borderWidth: 3, // Width of the line
+                            fill: true, // Fill the area under the line
+                            cubicInterpolationMode: 'monotone', // Smooth curve for the line
+                            tension: 0.4, // Make the line curve smoothly
+                            // Add shadow effect to the line
+                            shadowOffsetX: 3,
+                            shadowOffsetY: 3,
+                            shadowBlur: 5,
+                            shadowColor: 'rgba(0, 102, 255, 0.5)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 16, weight: 'bold' },
+                            bodyFont: { size: 14 },
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return 'Cases: ' + tooltipItem.yLabel;
+                                }
                             }
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: false,
+                            animationDuration: 400,
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                                ticks: { font: { size: 14 }, color: '#004085' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                                ticks: { font: { size: 14 }, color: '#004085', beginAtZero: true }
+                            }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuad'
                         }
-                    });
+                    }
                 });
-            </script>
-        </section>
+            });
+        </script>
+    </section>
 
         <section class="activities">
             <div class="activities-box">

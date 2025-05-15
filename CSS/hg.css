@@ -30,3 +30,53 @@
     margin-bottom: 10px;
 }
 
+/* Light mode (default) */
+.analytics,
+.appointment,
+.activities,
+.stat-box,
+.stat-box1 {
+    background: #f8f9fa;
+    color: #212529;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark mode overrides */
+body.dark .analytics,
+body.dark .appointment,
+body.dark .activities,
+body.dark .stat-box,
+body.dark .stat-box1 {
+    background: #1e1e2f;
+    color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .analytics h2,
+body.dark .appointment h2,
+body.dark .activities h2 {
+    color: #9cd4ff;
+}
+
+body.dark nav,
+body.dark nav .form-input input,
+body.dark nav .form-input .search-btn {
+    background-color: #1e1e2f;
+    color: #f1f1f1;
+}
+
+body.dark nav .form-input input::placeholder {
+    color: #ccc;
+}
+
+/* Optional: Adjust sidebar and breadcrumb for dark mode */
+body.dark #sidebar {
+    background-color: #181825;
+    color: #f1f1f1;
+}
+
+body.dark .head-title h1,
+body.dark .breadcrumb a,
+body.dark .breadcrumb i {
+    color: #ddd;
+}

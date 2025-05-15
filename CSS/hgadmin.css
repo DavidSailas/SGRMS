@@ -127,6 +127,71 @@ body {
 	width: calc(48px - (4px * 2));
 	transition: width .3s ease;
 }
+#sidebar .dropdown {
+    position: relative;
+}
+
+/* Submenu style */
+/* Initially hide the submenu */
+.submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 30px;
+}
+
+.submenu li a:hover {
+    color: #004085;
+}
+
+#sidebar .submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background: #fff;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#sidebar .dropdown.show .submenu {
+    display: block;
+}
+
+#sidebar .submenu li a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+#sidebar .submenu li a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Show submenu when the parent li has 'show' class */
+#sidebar .side-menu li.show .submenu {
+    display: flex;
+}
+
+.submenu li a {
+    font-size: 14px;
+    color: #333;
+    padding: 8px 0;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s ease;
+}
+
+#sidebar .side-menu li.show > a .bx-chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
 
 /*==================== CONTENT WRAPPER ====================*/
 #content {
@@ -172,6 +237,40 @@ body {
 #content nav .bx.bx-menu {
     cursor: pointer;
     color: var(--dark);
+}
+
+/* Notification Number Animation */
+.notification .num {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    animation: glow-pulse 1.5s infinite;
+    box-shadow: 0 0 5px var(--red);
+}
+
+@keyframes glow-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px var(--red);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px var(--red), 0 0 25px var(--red);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px var(--red);
+    }
+}
+
+.notification {
+    position: relative;
 }
 
 #content nav .nav-link {
