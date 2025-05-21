@@ -1,0 +1,278 @@
+    
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+        border: none;
+        background: none;
+    }
+    .tab:hover, .tab.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+    }
+    .search-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .search-container {
+        flex-grow: 1;
+        text-align: right; /* Aligns the search input to the right */
+    }
+    .search-input {
+        padding: 10px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .btn-archive {
+        background-color: #dc3545; /* Red */
+        color: white;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s ease-in-out;
+        display: inline-block;
+        margin: 5px;
+    }
+    .btn-archive:hover {
+        background-color: #c82333;
+    }
+
+   .notification-wrapper {
+    position: absolute;
+    top: 30px;    /* Adjust as needed */
+    right: 40px;  /* Pushes it to the right side */
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+
+/* Bell Icon and Badge */
+.notification-bell {
+    font-size: 15px;
+    position: relative;
+    color: #333;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Dropdown */
+#notificationDropdown {
+    position: absolute; /* make sure it's absolutely positioned under the bell */
+    right: 0;           /* align dropdown to the right */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    padding: 10px 0;
+    margin-top: 8px;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+
+#notificationDropdown ul {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+#notificationDropdown ul li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #555;
+    transition: background 0.2s ease;
+}
+
+#notificationDropdown ul li:hover {
+    background: #f5f5f5;
+}
+
+#seeMoreWrapper {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    background: #fafafa;
+}
+
+#seeMoreWrapper a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+}
+
+/* Modal */
+#notificationModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+#notificationModal > div {
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 20px;
+    border-radius: 10px;
+    animation: slideDown 0.4s ease;
+}
+
+#notificationModal h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+#modalNotificationList {
+    max-height: 300px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#modalNotificationList li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+}
+
+#notificationModal button {
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+#notificationModal button:hover {
+    background: #0056b3;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: auto;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 8px;
+  position: relative;
+  max-height: 80vh;      /* Limit modal height */
+  overflow-y: auto;      /* Enable vertical scroll */
+}
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 24px;
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.flex 
+{
+    display: flex;
+   flex-direction: row;
+   justify-content: center;
+    align-items: center;
+}
