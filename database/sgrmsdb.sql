@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2025 at 09:10 AM
+-- Generation Time: May 24, 2025 at 06:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -107,7 +107,7 @@ CREATE TABLE `case_records` (
 --
 
 INSERT INTO `case_records` (`case_id`, `case_type`, `description`, `reported_by`, `referred_by`, `referral_date`, `reason_for_referral`, `presenting_problem`, `observe_behavior`, `family_background`, `academic_history`, `social_relationships`, `medical_history`, `counselor_assessment`, `recommendations`, `follow_up_plan`, `filed_date`, `filed_time`, `status`, `student_id`) VALUES
-(3, 'Peer Conflict', 'A consequatur Dolor', 'Architecto voluptate', 'Doloremque sed corru', '2001-02-28 00:00:00', 'Molestiae irure eius', 'Nulla praesentium al', 'Nulla sunt sit dolo', 'Consequat Pariatur', 'Nesciunt laborum D', 'Lorem aute officia i', 'Laudantium voluptas', 'Adipisci hic reprehe', 'Incidunt nisi aliqu', 'Eos nulla voluptate', '2025-05-21', '01:56:30', 'Resolved', 1),
+(3, 'Peer Conflict', 'A consequatur Dolor', 'Architecto voluptate', 'Doloremque sed corru', '2001-02-28 00:00:00', 'Molestiae irure eius', 'Nulla praesentium al', 'Nulla sunt sit dolo', 'Consequat Pariatur', 'Nesciunt laborum D', 'Lorem aute officia i', 'Laudantium voluptas', 'Adipisci hic reprehe', 'Incidunt nisi aliqu', 'Eos nulla voluptate', '2025-05-21', '01:56:30', 'Archived', 1),
 (4, 'Academic', 'Neque sunt deserunt ', 'Ullamco velit cum p', 'Voluptate id iste qu', '1973-05-20 00:00:00', 'Rerum corporis nostr', 'Sed dolore nobis ali', 'Temporibus laborum ', 'Aliqua Obcaecati po', 'Omnis enim expedita ', 'Blanditiis explicabo', 'Minus nisi ut exerci', 'Ducimus ullam dolor', 'Nihil error eiusmod ', 'Qui incidunt simili', '2025-05-21', '02:03:02', 'Pending', 1),
 (5, 'Emotional', 'Lorem cupiditate quo', 'Consequatur aut rat', 'Sit corporis rerum ', '2018-02-10 00:00:00', 'Quae molestiae ad fu', 'Duis sit sint dicta', 'Nihil quo quis aperi', 'Et excepteur ratione', 'Ex est eum dolore co', 'Est consequatur eos', 'Sint provident dolo', 'Ex consequatur persp', 'Excepturi inventore ', 'Occaecat laborum Qu', '2025-05-21', '02:03:16', 'Resolved', 2),
 (6, 'Emotional', 'Anim consequatur ius', 'Quia qui consequatur', 'Minim dicta ut perfe', '2015-10-30 00:00:00', 'Commodo voluptatibus', 'Modi voluptatum veni', 'Ut sequi officiis co', 'Voluptatum eum illo ', 'Voluptatem Officia ', 'Omnis sint ut accusa', 'Officia autem distin', 'Impedit aut occaeca', 'Cum Nam ipsa debiti', 'Commodo non officiis', '2025-05-21', '02:03:34', 'Resolved', 1),
@@ -228,7 +228,7 @@ CREATE TABLE `students` (
   `program` varchar(100) DEFAULT NULL,
   `s_image` varchar(255) NOT NULL,
   `previous_school` varchar(255) DEFAULT NULL,
-  `status` varchar(20) DEFAULT NULL,
+  `status` varchar(20) NOT NULL,
   `parent_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -238,19 +238,19 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`s_id`, `id_num`, `suffix`, `lname`, `fname`, `mname`, `sex`, `bod`, `address`, `mobile_num`, `email`, `educ_level`, `year_level`, `section`, `program`, `s_image`, `previous_school`, `status`, `parent_id`) VALUES
 (1, 'SCC-25-00000001', '', 'Cole', 'Jescie', 'Zephania Preston', 'Male', '1993-05-30', 'Nostrum adipisicing ', 'A consequuntur ', 'qylifeboz@mailinator.com', 'College', '1st Year', '', 'BSIT', '/Public/stud.img/default.png', 'Facere quia maxime e', 'Active', 1),
-(2, 'SCC-25-00000002', 'Numquam te', 'Buchanan', 'Jonas', 'Miriam Abbott', 'Female', '1993-02-07', 'Qui ut quo commodo d', 'Eu autem quidem', 'pokoqijepy@mailinator.com', 'High School', 'Grade 9', 'Tempore autem labor', '', '/Public/stud.img/default.png', 'Nulla sequi tempor n', 'Active', 2),
-(3, 'SCC-25-00000003', 'Et in amet', 'Haney', 'Sylvia', 'Jasper Norman', 'Male', '2023-04-11', 'Ex eius fuga Unde i', 'Ipsam natus ex ', 'pubulorij@mailinator.com', 'Elementary', 'Grade 5', 'Ullam sit delectus', '', '/Public/stud.img/default.png', 'Temporibus qui beata', 'Active', 3),
+(2, 'SCC-25-00000002', 'Numquam te', 'Buchanan', 'Jonas', 'Miriam Abbott', 'Female', '1993-02-07', 'Qui ut quo commodo d', 'Eu autem quidem', 'pokoqijepy@mailinator.com', 'High School', 'Grade 9', 'Tempore autem labor', '', '/Public/stud.img/default.png', 'Nulla sequi tempor n', 'Inactive', 2),
+(3, 'SCC-25-00000003', 'Et in amet', 'Haney', 'Sylvia', 'Jasper Norman', 'Male', '2023-04-11', 'Ex eius fuga Unde i', 'Ipsam natus ex ', 'pubulorij@mailinator.com', 'Elementary', 'Grade 5', 'Ullam sit delectus', '', '/Public/stud.img/default.png', 'Temporibus qui beata', 'Inactive', 3),
 (4, 'SCC-25-00000004', 'Aspernatur', 'Donovan', 'Drake', 'Cyrus Cantu', 'Male', '1978-06-30', 'Eos aut ea omnis ab ', 'Velit voluptati', 'wojajuhoma@mailinator.com', 'Elementary', 'Grade 5', 'Nihil aut ut in qui ', '', '/Public/stud.img/default.png', 'Optio commodo sed e', 'Active', 4),
 (5, 'SCC-25-00000005', 'Vel maxime', 'Pitts', 'Solomon', 'Hyacinth Nash', 'Male', '2016-08-30', 'Inventore est ut et ', 'Ea velit maiore', 'felocaj@mailinator.com', 'College', '2nd Year', 'Cupiditate ut aliqua', 'BSIT', '/Public/stud.img/default.png', 'Deserunt consequatur', 'Active', 5),
 (6, 'SCC-25-00000006', 'Quaerat qu', 'Wheeler', 'Kaye', 'Lillith Berger', 'Female', '2017-06-19', 'Rerum laborum Neces', 'Qui et enim err', 'tifu@mailinator.com', 'Elementary', 'Grade 2', 'Est rerum et soluta', '', '/Public/stud.img/default.png', 'Aut obcaecati consec', 'Active', 6),
 (7, 'SCC-25-00000007', 'Modi sit d', 'Calhoun', 'Garth', 'Latifah Gillespie', 'Male', '1990-04-22', 'Est atque eiusmod s', 'Dolore qui obca', 'hudi@mailinator.com', 'Elementary', 'Grade 4', 'Et ad in sint volupt', '', '/Public/stud.img/default.png', 'Doloremque molestiae', 'Active', 7),
-(8, 'SCC-25-00000008', 'Id est har', 'Young', 'Cally', 'Herman Finley', 'Female', '1980-10-09', 'Blanditiis sequi vol', 'Molestias quasi', 'hawahifo@mailinator.com', 'High School', 'Grade 11', 'Corporis minim neque', '', '/Public/stud.img/default.png', 'Cupidatat eos dolor', 'Active', 9),
-(9, 'SCC-25-00000009', 'In sed cum', 'Thornton', 'Kareem', 'Leandra Schroeder', 'Male', '1990-09-04', 'Harum qui atque dolo', 'Repellendus Off', 'sujehuju@mailinator.com', 'College', '2nd Year', 'Accusantium similiqu', '', '/Public/stud.img/default.png', '0', '1', 11),
-(10, 'SCC-25-00000010', 'Laboris re', 'Cooper', 'Gareth', 'Tucker Phelps', 'Male', '2016-09-22', 'Et fugit recusandae', 'Possimus elit e', 'zivojejihu@mailinator.com', 'High School', 'Grade 11', 'Qui magnam aut labor', '', '/Public/stud.img/default.png', '0', '1', 12),
-(11, 'SCC-25-00000011', 'Quae ea no', 'Sears', 'Brian', 'Alexandra Roth', 'Female', '1983-02-05', 'Et nemo et officia r', 'Esse lorem quod', 'myge@mailinator.com', 'College', '4th Year', 'Est voluptatem min', '', '/Public/stud.img/default.png', '0', '1', 13),
-(12, 'SCC-25-00000012', '', 'Howell', 'Vaughan', 'Sage Franco', 'Male', '2008-07-19', 'Vero cum doloribus e', 'Eligendi sed it', 'mifiw@mailinator.com', 'Elementary', 'Grade 4', 'Dolor magna iste ad ', '', '/Public/stud.img/default.png', '0', '1', 15),
-(13, 'SCC-25-00000013', '', 'Smith', 'Kylan', 'Martina Castro', 'Female', '2017-04-10', 'Atque expedita vero ', 'Qui sequi dolor', 'feci@mailinator.com', 'Elementary', 'Grade 3', 'Similique earum prae', '', '/Public/stud.img/default.png', '0', '1', 17),
-(14, 'SCC-25-00000014', 'Itaque tem', 'Riley', 'Macaulay', 'April Church', 'Male', '1993-06-14', 'Non possimus except', 'In sequi repell', 'zaguvo@mailinator.com', 'Elementary', 'Grade 6', 'Laborum Accusantium', '', '/Public/stud.img/default.png', 'Reprehenderit aute ', NULL, 18);
+(8, 'SCC-25-00000008', 'Id est har', 'Young', 'Cally', 'Herman Finley', 'Female', '1980-10-09', 'Blanditiis sequi vol', 'Molestias quasi', 'hawahifo@mailinator.com', 'High School', 'Grade 11', 'Corporis minim neque', '', '/Public/stud.img/default.png', 'Cupidatat eos dolor', 'Archived', 9),
+(9, 'SCC-25-00000009', 'In sed cum', 'Thornton', 'Kareem', 'Leandra Schroeder', 'Male', '1990-09-04', 'Harum qui atque dolo', 'Repellendus Off', 'sujehuju@mailinator.com', 'College', '2nd Year', 'Accusantium similiqu', '', '/Public/stud.img/default.png', '0', 'Active', 11),
+(10, 'SCC-25-00000010', 'Laboris re', 'Cooper', 'Gareth', 'Tucker Phelps', 'Male', '2016-09-22', 'Et fugit recusandae', 'Possimus elit e', 'zivojejihu@mailinator.com', 'High School', 'Grade 11', 'Qui magnam aut labor', '', '/Public/stud.img/default.png', '0', 'Active', 12),
+(11, 'SCC-25-00000011', 'Quae ea no', 'Sears', 'Brian', 'Alexandra Roth', 'Female', '1983-02-05', 'Et nemo et officia r', 'Esse lorem quod', 'myge@mailinator.com', 'College', '4th Year', 'Est voluptatem min', '', '/Public/stud.img/default.png', '0', 'Active', 13),
+(12, 'SCC-25-00000012', '', 'Howell', 'Vaughan', 'Sage Franco', 'Male', '2008-07-19', 'Vero cum doloribus e', 'Eligendi sed it', 'mifiw@mailinator.com', 'Elementary', 'Grade 4', 'Dolor magna iste ad ', '', '/Public/stud.img/default.png', '0', 'Active', 15),
+(13, 'SCC-25-00000013', '', 'Smith', 'Kylan', 'Martina Castro', 'Female', '2017-04-10', 'Atque expedita vero ', 'Qui sequi dolor', 'feci@mailinator.com', 'Elementary', 'Grade 3', 'Similique earum prae', '', '/Public/stud.img/default.png', '0', 'Inactive', 17),
+(14, 'SCC-25-00000014', 'Itaque tem', 'Riley', 'Macaulay', 'April Church', 'Male', '1993-06-14', 'Non possimus except', 'In sequi repell', 'zaguvo@mailinator.com', 'Elementary', 'Grade 6', 'Laborum Accusantium', '', '/Public/stud.img/default.png', 'Reprehenderit aute ', 'Archived', 18);
 
 -- --------------------------------------------------------
 
@@ -277,7 +277,7 @@ INSERT INTO `users` (`u_id`, `username`, `password`, `status`, `role`, `student_
 (1, 'headguidance', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Head Guidance', NULL, NULL, NULL),
 (2, 'SCC-25-00000001', '$2y$10$579Xu...Y/Zz.h/wD95E9OwhqRbBLsSyyxvkIAM7dMRMZTOMy5cYa', 'Active', 'Student', 1, 1, NULL),
 (3, 'SCC-25-00000002', '$2y$10$WIlEgcQA3TKPQ.SUPUiER.hMkdPnrjvL/Rd15qtgUgHicKYjjcXV6', 'Active', 'Student', 2, 2, NULL),
-(4, 'SCC-25-00000003', '$2y$10$Aq74d4u1scgcvwP6kLjrAujZ.MUNG1w1Wp/CJNZjt8.NmUhlZtg2W', 'Active', 'Student', 3, 3, NULL),
+(4, 'SCC-25-00000003', '$2y$10$Aq74d4u1scgcvwP6kLjrAujZ.MUNG1w1Wp/CJNZjt8.NmUhlZtg2W', 'Pending', 'Student', 3, 3, NULL),
 (5, 'parent', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Parent', NULL, 4, NULL),
 (6, 'counsel', '$2y$10$s3e3fuEZShWuYA4s05VW6.IB6ke3b0NbBEzzGMFzk3sNDzgyt1UGS', 'Active', 'Guidance Counselor', NULL, NULL, 1),
 (7, 'dasai', '$2y$10$PTn61IuKTbBHA6a9LHAALudpYyPXeKDTpenbfc1zq88M4OCDLgxdq', 'Active', 'Guidance Counselor', NULL, NULL, 2),
@@ -285,7 +285,7 @@ INSERT INTO `users` (`u_id`, `username`, `password`, `status`, `role`, `student_
 (9, 'SCC-25-00000005', '$2y$10$irAu/sgGZmEKbIRqXjcuw.lTciTgBtHguaB1ZbvQpqXN.k2xEXPOK', 'Active', 'Student', 5, 5, NULL),
 (10, 'SCC-25-00000006', '$2y$10$2eCZ6BmpXhljfwYlMdEkB.tITZC3XMVHs/dSbb2lDsdk9nkmrC4Aq', 'Active', 'Student', 6, 6, NULL),
 (11, 'SCC-25-00000007', '$2y$10$ddD0IoS9V.6A6buF5HXoFOUASal3xGnVSuq8kbdo6sg6xb169Y0em', 'Active', 'Student', 7, 7, NULL),
-(12, 'SCC-25-00000008', '$2y$10$DFbdeNETTcrAryzPxFCfOub.GZzu9IUpw2jwBFWGvbOA865d1HVN.', 'Active', 'Student', 8, 9, NULL),
+(12, 'SCC-25-00000008', '$2y$10$DFbdeNETTcrAryzPxFCfOub.GZzu9IUpw2jwBFWGvbOA865d1HVN.', 'Pending', 'Student', 8, 9, NULL),
 (13, 'SCC-25-00000009', '$2y$10$LjZvpes2Mj.krAPlooKNzOCdEJsb6CHS/RSqJAEAo835QPiJJUk1G', 'Active', 'Student', 9, 11, NULL),
 (14, 'SCC-25-00000010', '$2y$10$.NoU0g4ZlBfNhE5IfPkGi.RuShcj.OxstEUImL0VKqEDzf9pjoWiO', 'Active', 'Student', 10, 12, NULL),
 (15, 'SCC-25-00000011', '$2y$10$HkNSfsZPN0Yb4F4kbCd6Aeb1QQIZFD8G7WgYVEaajVktbHGu8XVju', 'Active', 'Student', 11, 13, NULL),
