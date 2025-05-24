@@ -25,7 +25,8 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>School Guidance Record Management System</title>
-     <link rel="stylesheet" href="../../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
     <link rel="stylesheet" href="../../css/table.css">
     <link rel="stylesheet" href="../../css/appoint.css">
@@ -145,7 +146,9 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
             <div class="box-left">
                 <div class="add-appoint">
                     <h2>Add appointment in <br>your schedule now</h2>
-                    <button class="add-btn">Add Appointment</button>
+                    <button class="add-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAppointmentModal">
+                        Add Appointment
+                    </button>
                 </div>
                 <div class="schedule">
                     <div class="flex">
@@ -187,8 +190,10 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 </section>
 
 <?php include 'Modal/notifModal.php'; ?>
+<?php include 'Modal/appointModal.php'; ?>
 
 <!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/head.js"></script>
 <script src="../../js/searchfilter.js"></script>
 <script src="../../js/daypilot/daypilot-all.min.js"></script>
