@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     if ($studentId) {
 
-        $sql = "UPDATE students SET status = 'Inactive' WHERE s_id = ?";
+        $sql = "UPDATE students SET status = 'Archived' WHERE s_id = ?";
         $stmt = $conn->prepare($sql);
 
         if ($stmt) {

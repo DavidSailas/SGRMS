@@ -121,9 +121,10 @@
             <span id="edit_id_num_display"><i>Loading...</i></span> 
             <input type="hidden" id="edit_id_num" name="id_num">
             
-            <label for="edit_suffix">Suffix:</label>
-            <input type="text" id="edit_suffix" name="suffix" placeholder="e.g. Jr., Sr., III">
-            
+            <label for="edit_image">Image:</label>
+            <input type="file" id="edit_image" name="image" accept="image/*">
+            <img id="edit_studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
+
             <label for="edit_lname">Last Name:</label>
             <input type="text" id="edit_lname" name="lname" placeholder="Enter last name">
 
@@ -132,6 +133,9 @@
 
             <label for="edit_mname">Middle Name:</label>
             <input type="text" id="edit_mname" name="mname" placeholder="Enter middle name">
+
+            <label for="edit_suffix">Suffix:</label>
+            <input type="text" id="edit_suffix" name="suffix" placeholder="e.g. Jr., Sr., III">
 
             <label for="edit_bod">Birthdate:</label>
             <input type="date" id="edit_bod" name="bod">
@@ -184,10 +188,6 @@
             <label for="edit_previous_school">Previous School:</label>
             <input type="text" id="edit_previous_school" name="previous_school" placeholder="Enter previous school name">
 
-            <label for="edit_image">Image:</label>
-            <input type="file" id="edit_image" name="image" accept="image/*">
-            <img id="edit_studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
-
             <hr style="margin: 20px 0;">
             <div style="margin-bottom: 10px;">
                 <strong>In case of emergency</strong>
@@ -209,7 +209,9 @@
                 <input type="email" id="edit_guardian_email" name="guardian_email" placeholder="Enter guardian's email " required>
             </div>
 
-            <button type="submit">Update</button>
+            <button type="submit" name="action" value="update">Update</button>
+            <button type="submit" name="action" value="drop">Drop</button>
+
         </form>
     </div>
 </div>

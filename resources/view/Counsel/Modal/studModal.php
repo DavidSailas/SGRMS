@@ -17,8 +17,9 @@
         <span id="id_num_display">Loading...</span>
         <input type="hidden" id="id_num" name="id_num">
 
-            <label for="suffix">Suffix:</label>
-            <input type="text" id="suffix" name="suffix" placeholder=" e.g. Jr., Sr., III">
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <img id="studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
             
             <label for="lname">Last Name:</label>
             <input type="text" id="lname" name="lname" placeholder="Enter last name">
@@ -28,7 +29,9 @@
 
             <label for="mname">Middle Name:</label>
             <input type="text" id="mname" name="mname" placeholder="Enter middle name">
-           
+            
+            <label for="suffix">Suffix:</label>
+            <input type="text" id="suffix" name="suffix" placeholder=" e.g. Jr., Sr., III">
             
             <label for="bod">Birthdate:</label>
             <input type="date" id="bod" name="bod">
@@ -80,10 +83,6 @@
             <label for="previous_school">Previous School:</label>
             <input type="text" id="previous_school" name="previous_school" placeholder="Enter previous school name">
             
-            <label for="image">Image:</label>
-            <input type="file" id="image" name="image" accept="image/*">
-            <img id="studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
-
             <hr style="margin: 20px 0;">
 
             <div style="margin-bottom: 10px;">
@@ -91,19 +90,19 @@
             </div>
             <div class="form-group">
                 <label for="guardian_name">Guardian Name:</label>
-                <input type="text" id="guardian_name" name="guardian_name" placeholder="Enter guardian's name">
+                <input type="text"  placeholder="Enter guardian's name">
             </div>
             <div class="form-group">
                 <label for="relationship">Relationship:</label>
-                <input type="text" id="relationship" name="relationship" placeholder="e.g. Mother, Father, Guardian">
+                <input type="text"   placeholder="e.g. Mother, Father, Guardian">
             </div>
             <div class="form-group">
                 <label for="guardian_contact">Guardian Contact:</label>
-                <input type="text" id="guardian_contact" name="guardian_contact" placeholder="Enter guardian's contact number">
+                <input type="text"   placeholder="Enter guardian's contact number">
             </div>
             <div class="form-group">
                 <label for="guardian_email">Guardian Email:</label>
-                <input type="email" id="guardian_email" name="guardian_email" placeholder="Enter guardian's email" required>
+                <input type="email"   placeholder="Enter guardian's email" required>
             </div>
 
             <button type="submit">Save</button>
@@ -122,9 +121,10 @@
             <span id="edit_id_num_display"><i>Loading...</i></span> 
             <input type="hidden" id="edit_id_num" name="id_num">
             
-            <label for="edit_suffix">Suffix:</label>
-            <input type="text" id="edit_suffix" name="suffix" placeholder="e.g. Jr., Sr., III">
-            
+            <label for="edit_image">Image:</label>
+            <input type="file" id="edit_image" name="image" accept="image/*">
+            <img id="edit_studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
+
             <label for="edit_lname">Last Name:</label>
             <input type="text" id="edit_lname" name="lname" placeholder="Enter last name">
 
@@ -133,6 +133,9 @@
 
             <label for="edit_mname">Middle Name:</label>
             <input type="text" id="edit_mname" name="mname" placeholder="Enter middle name">
+
+            <label for="edit_suffix">Suffix:</label>
+            <input type="text" id="edit_suffix" name="suffix" placeholder="e.g. Jr., Sr., III">
 
             <label for="edit_bod">Birthdate:</label>
             <input type="date" id="edit_bod" name="bod">
@@ -185,10 +188,6 @@
             <label for="edit_previous_school">Previous School:</label>
             <input type="text" id="edit_previous_school" name="previous_school" placeholder="Enter previous school name">
 
-            <label for="edit_image">Image:</label>
-            <input type="file" id="edit_image" name="image" accept="image/*">
-            <img id="edit_studentImage" src="../../Public/stud.img/circle-user.png" alt="Student Image" style="display: none; width: 100px; height: auto; margin-top: 10px;">
-
             <hr style="margin: 20px 0;">
             <div style="margin-bottom: 10px;">
                 <strong>In case of emergency</strong>
@@ -210,7 +209,9 @@
                 <input type="email" id="edit_guardian_email" name="guardian_email" placeholder="Enter guardian's email " required>
             </div>
 
-            <button type="submit">Update</button>
+            <button type="submit" name="action" value="update">Update</button>
+            <button type="submit" name="action" value="drop">Drop</button>
+
         </form>
     </div>
 </div>

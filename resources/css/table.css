@@ -1,5 +1,23 @@
 
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+        border: none;
+        background: none;
+    }
+    .tab:hover, .tab.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+    }
 
+    
 /* Scrollable table wrapper */
 
 

@@ -11,7 +11,7 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn">&times;</span>
         <h2>Add New Case</h2>
-        <form action="../../../app/Controllers/Head/CaseController/addcase.php" method="POST">
+        <form action="../../../app/Controllers/Counsel/CaseController/addcase.php" method="POST">
             <div class="form-group">
                 <label for="student_search">Student:</label>
                 <div id="selectedStudentId" style="margin-bottom: 5px; font-weight: bold;"></div>
@@ -111,7 +111,7 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeEditModal()">&times;</span>
         <h2>Edit Case</h2>
-        <form action="../../../app/Controllers/Head/CaseController/editcase.php" method="POST">
+        <form action="../../../app/Controllers/Counsel/CaseController/editcase.php" method="POST">
             <input type="hidden" id="edit_case_id" name="case_id">
             <div class="form-group">
                 <label for="case_type">Case Type:</label>

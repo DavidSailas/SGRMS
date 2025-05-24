@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../../../database/db_connect.php';
+
 $activitySql = "SELECT activity, timestamp FROM activity_logs ORDER BY timestamp DESC LIMIT 10";
 $activityResult = $conn->query($activitySql);
 
@@ -143,15 +144,18 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                     <h2>Student List</h2>                       
                     <div class="search-bar">
                         <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name">
-                        <select name="filter_educ" id="filter_educ">
-                            <option value="">All Levels</option>
-                            <option value="Elementary">Elementary</option>
-                            <option value="High School">High School</option>
-                            <option value="College">College</option>
-                        </select>
                         <button class="btn btn-add" onclick="openAddModal()">Add Student</button>
                     </div>
-                
+                </div>
+
+                <!-- Education Level Tabs -->
+                <div class="tab-container">
+                    <a href="students.php" class="tab <?= !isset($_GET['status']) ? 'active' : '' ?>">All Students</a>
+                    <a href="students.php?status=college" class="tab <?= ($_GET['status'] ?? '') == 'college' ? 'active' : '' ?>">College</a>
+                    <a href="students.php?status=highschool" class="tab <?= ($_GET['status'] ?? '') == 'highschool' ? 'active' : '' ?>">Highschool</a>
+                    <a href="students.php?status=elementary" class="tab <?= ($_GET['status'] ?? '') == 'elementary' ? 'active' : '' ?>">Elementary</a>
+                    <a href="students.php?status=inactive" class="tab <?= ($_GET['status'] ?? '') == 'inactive' ? 'active' : '' ?>">Inactive</a>
+                    <a href="students.php?status=archived" class="tab <?= ($_GET['status'] ?? '') == 'archived' ? 'active' : '' ?>">Archived</a>
                 </div>
 
                 <div class="table-container">
@@ -169,13 +173,55 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                         </thead>
                         <tbody id="studentTableBody">
                             <?php
-                                $sql = "SELECT s_id, id_num, suffix, lname, fname, mname, sex, bod, address, mobile_num, email, 
-                                        educ_level, year_level, section, program, previous_school, status,
-                                        (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
-                                        FROM students
-                                        WHERE status = 'Active'|| 1";
+                                $filter = $_GET['status'] ?? 'active';
 
-                                $result = $conn->query($sql);   
+                                $educLevelMap = [
+                                    'college' => 'College',
+                                    'highschool' => 'High School',
+                                    'elementary' => 'Elementary'
+                                ];
+
+                                if (in_array($filter, ['college', 'highschool', 'elementary'])) {
+                                    $educLevel = $educLevelMap[$filter];
+                                    $sql = "SELECT s_id, id_num, suffix, lname, fname, mname, sex, bod, address, mobile_num, email, 
+                                            educ_level, year_level, section, program, previous_school, status,
+                                            (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
+                                            FROM students
+                                            WHERE educ_level = ?
+                                            AND status = 'active'
+                                            ORDER BY lname ASC";
+                                    $stmt = $conn->prepare($sql);
+                                    $stmt->bind_param("s", $educLevel);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                } elseif (in_array($filter, ['inactive', 'archived'])) {
+                                    $sql = "SELECT s_id, id_num, suffix, lname, fname, mname, sex, bod, address, mobile_num, email, 
+                                            educ_level, year_level, section, program, previous_school, status,
+                                            (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
+                                            FROM students
+                                            WHERE status = ?
+                                            ORDER BY lname ASC";
+                                    $stmt = $conn->prepare($sql);
+                                    $stmt->bind_param("s", $filter);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+
+                                } else {
+                                    // default: show all active students
+                                    $sql = "SELECT s_id, id_num, suffix, lname, fname, mname, sex, bod, address, mobile_num, email, 
+                                            educ_level, year_level, section, program, previous_school, status,
+                                            (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
+                                            FROM students
+                                            WHERE status = 'active'
+                                            ORDER BY lname ASC";
+                                    $result = $conn->query($sql);
+                                }
+
+
+                                if (!isset($stmt)) {
+                                    $result = $conn->query($sql);
+                                }
+
 
                                 if ($result && $result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
@@ -198,13 +244,14 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                                         $mname = ($mname !== '') ? strtoupper(substr($mname, 0, 1)) . '.' : '';
                                         $name = trim($row['lname'] . ", " . $row['fname'] . " " . $mname . " " . $suffix);
 
-                                        echo "<tr>
+                                        echo "<tr data-status='" . htmlspecialchars(strtolower($row['status'])) . "'>
                                             <td><span class='status-circle $statusClass' style='background: $statusClass !important;'></span></td>
                                             <td>".htmlspecialchars($row['id_num'])."</td>
                                             <td>".htmlspecialchars($name)."</td>
                                             <td>".$age."</td>
                                             <td>".htmlspecialchars($row['educ_level'])."</td>
                                             <td>".(!empty($row['section']) ? htmlspecialchars($row['section']) : htmlspecialchars($row['program']))."</td>
+                                            <td style='display:none;' class='status-text'>".htmlspecialchars(strtolower($row['status']))."</td>
                                             <td>
                                                 <button class='btn btn-view' onclick='viewStudent(".$row['s_id'].")'>View</button>
                                                 <button class='btn btn-edit' onclick='openEditModal(".$row['s_id'].")'>Edit</button>
@@ -230,7 +277,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 
 <!-- SCRIPTS -->
 <script src="../../js/head.js"></script>
-<script src="../../js/searchfilter.js"></script>
+<script src="../../js/studfilter.js"></script>
 <script src="../../js/Modal/studModal.js"></script>
 <script src="../../js/pagination.js"></script>
 <script src="../../js/Modal/notifModal.js"></script>
@@ -238,6 +285,27 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
     document.addEventListener('DOMContentLoaded', function() {
         paginateTable();
     });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search");
+    const tableBody = document.getElementById("studentTableBody");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "../../../app/Controllers/Head/StudentController/searchstud.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function () {
+            if (this.status === 200) {
+                tableBody.innerHTML = this.responseText;
+            }
+        };
+
+        xhr.send("search=" + encodeURIComponent(query));
+    });
+});
 </script>
 </body>
 </html>

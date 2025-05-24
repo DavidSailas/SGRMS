@@ -13,7 +13,10 @@
 
      
             $.ajax({
-                url: '../../../app/Controllers/Head/AppointController/addappoint.php', 
+                url: '../../../app/Controllers/Head/AppointController/addappoint.php'
+                || '../../../app/Controllers/Counsel/AppointController/addappoint.php'
+                || '../../../app/Controllers/Parent/AppointController/addappoint.php'
+                || '../../../app/Controllers/Student/AppointController/addappoint.php', 
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
