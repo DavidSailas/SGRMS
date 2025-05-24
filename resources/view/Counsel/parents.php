@@ -52,13 +52,13 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="parents.php">
                 <i class='bx bxs-chalkboard'></i> 
                 <span class="text">Parents</span>
             </a>
         </li>
-        <li class="active">
+        <li>
             <a href="students.php">
                 <i class='bx bxs-graduation'></i> 
                 <span class="text">Students</span>
@@ -101,12 +101,11 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
         <a href="#" class="nav-link">Welcome, Counselor</a>
         <form action="#">
             <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+             
             </div>
         </form>
         <input type="checkbox" id="switch-mode" hidden>
-        <label for="switch-mode" class="switch-mode" aria-label="Switch Dark/Light Mode"></label>
+        
         <a href="#" id="notificationBell" class="notification">
             <i class='bx bxs-bell'></i>
             <span class="num" style="<?= $notifCount > 0 ? '' : 'display:none;' ?>">

@@ -153,19 +153,39 @@
     margin-right: 10px;
 }
 
+.order table tbody tr:hover {
+    background: #f1f7ff;
+    transition: background 0.2s;
+}
+
 .status.completed {
-    color: green;
-    font-weight: bold;
+    background: #eafaf1;
+    border-radius: 12px;
+    padding: 4px 12px;
+    color: #27ae60;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .status.pending {
-    color: orange;
-    font-weight: bold;
+    background: #fff6e0;
+    border-radius: 12px;
+    padding: 4px 12px;
+    color: #fdcb6e;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .status.process {
-    color: blue;
-    font-weight: bold;
+    background: #eaf1fa;
+    border-radius: 12px;
+    padding: 4px 12px;
+    color: #0984e3;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .todo-list {
@@ -178,6 +198,12 @@
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #ccc;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.todo-list li:hover {
+    background: #eaf6ff;
 }
 
 .todo-list li.completed p {
@@ -275,18 +301,24 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    margin: 1.5rem;
+    margin: 1.5rem 0 2rem 0;
     flex-wrap: wrap;
 }
 
 .card {
-    flex: 1 1 250px;  /* allows flex-grow and shrink, min 250px */
+    flex: 1 1 250px;
     background-color: #fff;
     padding: 1.2rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
-    min-width: 250px;
+    min-width: 220px;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(34,34,59,0.13);
+    transform: translateY(-4px) scale(1.03);
 }
 
 .card h4 {

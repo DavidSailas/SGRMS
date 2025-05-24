@@ -15,7 +15,7 @@
             <p>Welcome! Please enter your credentials to log in.</p>
             <form action="app/Controllers/Auth/LoginController.php" method="POST">
                 <div class="input-box" style="position:relative;">
-                    <input type="text" name="username" class="input-box" placeholder="Email or Student ID"
+                    <input type="text" name="username" class="input-box" placeholder="Username or Student ID"
                         value="<?php echo isset($_SESSION['old_username']) ? htmlspecialchars($_SESSION['old_username']) : ''; ?>">
                     <span class="input-icon">
                         <i class="fas fa-user"></i>
@@ -44,7 +44,7 @@
                 </div>
                 <button type="submit" class="log-btn">Login</button>
                 <div class="signup-link">
-                    <p>Don't have an account?<a href="#">Sign up</a></p>
+                    <p>Don't have an account?<a href="resources/view/auth/register.php">Sign up</a></p>
                 </div> 
             </form>  
         </div>

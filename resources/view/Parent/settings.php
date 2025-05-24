@@ -3,12 +3,6 @@ session_start();
 
 include '../../../database/db_connect.php';
 
-if (!isset($_SESSION['parent_id'])) {
-    header("Location: ../../../index.php");
-    exit();
-}
-
-$parent_id = $_SESSION['parent_id'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,10 +12,13 @@ $parent_id = $_SESSION['parent_id'];
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
-    <link rel="stylesheet" href="../../css/counsel.css">
+    <link rel="stylesheet" href="../../css/settings.css">
     <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+       
+    
 </head>
 <body>
 
@@ -38,7 +35,7 @@ $parent_id = $_SESSION['parent_id'];
             </a>
         </li>
 
-        <li class="active">
+        <li>
             <a href="my_child.php">
                   <i class='bx bxs-user'></i>
                 <span class="text">My Child</span>
@@ -58,7 +55,7 @@ $parent_id = $_SESSION['parent_id'];
         </li>
     </ul>
     <ul class="side-menu">
-        <li>
+        <li class="active">
             <a href="settings.php">
                 <i class='bx bxs-cog'></i>
                 <span class="text">Settings</span>
@@ -95,63 +92,30 @@ $parent_id = $_SESSION['parent_id'];
         <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
     </nav>
 
-        <div class="wrapper">
-
-
-        <!-- HEAD -->
-        <div class="head-title">
-            <div class="left"><h1>My Child</h1></div>
+    <div class="wrapper">
+        <div class="card" tabindex="0" onclick="window.location.href='#personal-info'">
+            <i class="bx bxs-user-detail"></i>
+            <h2>Personal info</h2>
+            <p>Provide personal details and how we can reach you.</p>
+        </div>
+        <div class="card" tabindex="0" onclick="window.location.href='#login-security'">
+            <i class="bx bxs-lock-alt"></i>
+            <h2>Login &amp; Security</h2>
+            <p>Update your password and secure your account.</p>
+        </div>
+        <div class="card" tabindex="0" onclick="window.location.href='#privacy'">
+            <i class="bx bxs-shield"></i>
+            <h2>Privacy</h2>
+            <p>Manage your personal data and connected services.</p>
         </div>
     </div>
 
-   
-    <main class="wrapper">
-        <div class="profiles-container">
-            <!-- Add new profile box -->
-            <div class="profile-box add-box" onclick="openFormModal()">
-                <i class='bx bx-plus add-profile-icon'></i>
-                <h2>Link Child</h2>
-            </div>
-
-            <?php
-              $sql = "SELECT * FROM students WHERE parent_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $parent_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-
-              if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $fullName = $row['lname'] . ', ' . $row['fname'] . ' ' . $row['mname'];
-                    $img = !empty($row['s_image']) ? htmlspecialchars($row['s_image']) : '../../Public/user.img/people.png';
-                    echo '<div class="profile-box view-child" data-student-id="' . $row['s_id'] . '">'; 
-                    echo '<img src="' . $img . '" alt="Student Picture" />';
-                    echo '<h2>' . htmlspecialchars($fullName) . '</h2>';
-                    echo '<p>' . htmlspecialchars($row['educ_level']) . ' - Year ' . htmlspecialchars($row['year_level']) . '</p>';
-                    echo '</div>';
-
-                }
-            } else {
-                echo '<p>No students found for this parent.</p>';
-            }
-            $stmt->close();
-            $conn->close();
-
-            ?>
-        </div>
-    </main>
 </section>
 
-<?php include 'Modal/childModal.php'; ?>
 <?php include 'Modal/notifModal.php'; ?>
 
 <!-- SCRIPTS -->
 <script src="../../js/head.js"></script>
-<script src="../../js/linechart.js"></script>
-<script src="../../js/Modal/childModal.js"></script>
-<script src="../../js/Modal/parentModal.js"></script>
 <script src="../../js/Modal/notifModal.js"></script>
-
 </body>
 </html>

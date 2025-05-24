@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+$_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +10,6 @@ session_start();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Student Guidance Record Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
     <link rel="stylesheet" href="../../css/table.css">
@@ -26,7 +28,7 @@ session_start();
         <span class="text">SGRMS</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="dashboard.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -38,7 +40,7 @@ session_start();
                 <span class="text">Reports</span>
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="appoint.php">
                 <i class='bx bxs-calendar'></i>
                 <span class="text">Appointments</span>
@@ -61,17 +63,6 @@ session_start();
     </ul>
 </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const profilingLink = document.getElementById('profiling-link');
-        const profilingSubmenu = document.getElementById('profiling-submenu');
-
-        profilingLink.addEventListener('click', function() {
-            profilingSubmenu.classList.toggle('active');
-        });
-    });
-</script>
 
 <!-- CONTENT -->
 <section id="content">

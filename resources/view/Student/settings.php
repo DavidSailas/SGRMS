@@ -10,7 +10,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
-    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/settings.css">
     <link rel="stylesheet" href="../../css/chatbot.css">
     <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
@@ -26,7 +26,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
         <span class="text">SGRMS</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="dashboard.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -46,7 +46,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
         </li>
     </ul>
     <ul class="side-menu">
-        <li>
+        <li class="active">
             <a href="settings.php">
                 <i class='bx bxs-cog'></i>
                 <span class="text">Settings</span>
@@ -66,15 +66,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
     <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
-        <a href="#" class="nav-link">
-            <?php
-                if (isset($_SESSION['fname'])) {
-                    echo "Welcome, " . htmlspecialchars($_SESSION['fname']);
-                } else {
-                    echo "Welcome, Student";
-                }
-            ?>
-        </a>
+        <a href="#" class="nav-link">Welcome, Parent</a>
         <form action="#">
             <div class="form-input">
              
@@ -92,47 +84,24 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
     </nav>
 
     <div class="wrapper">
-
-        <!-- Welcome & Stats -->
-        <div class="head-title">
-            <div class="left"><h1>Dashboard</h1></div>
+        <div class="card" tabindex="0" onclick="window.location.href='#personal-info'">
+            <i class="bx bxs-user-detail"></i>
+            <h2>Personal info</h2>
+            <p>Provide personal details and how we can reach you.</p>
         </div>
-        <div class="dashboard-cards">
-            <div class="card stat-cases">
-                <h4><i class='bx bxs-calendar-check' style="color:#4f8cff;"></i> Appointments</h4>
-                <p>2</p>
-            </div>
-            <div class="card stat-white">
-                <h4><i class='bx bxs-report' style="color:#fdcb6e;"></i> Reports</h4>
-                <p>1</p>
-            </div>
-            <div class="card stat-white">
-                <h4><i class='bx bxs-user' style="color:#00b894;"></i> Counselor</h4>
-                <p>Ms. Cruz</p>
-            </div>
+        <div class="card" tabindex="0" onclick="window.location.href='#login-security'">
+            <i class="bx bxs-lock-alt"></i>
+            <h2>Login &amp; Security</h2>
+            <p>Update your password and secure your account.</p>
         </div>
-
-        <!-- Analytics & Activities -->
-        <div class="box-page">
-            <section class="analytics">
-                <h2>Your Progress</h2>
-                <canvas id="studentChart" style="max-height:220px;"></canvas>
-            </section>
-            <section class="activities">
-                <div class="activities-box">
-                    <h2>Reminders</h2>
-                    <ul>
-                        <li>Prepare for your next counseling session</li>
-                        <li>Check your latest report</li>
-                        <li>Update your profile if needed</li>
-                    </ul>
-                </div>
-            </section>
+        <div class="card" tabindex="0" onclick="window.location.href='#privacy'">
+            <i class="bx bxs-shield"></i>
+            <h2>Privacy</h2>
+            <p>Manage your personal data and connected services.</p>
         </div>
-
     </div>
-</section>
 
+</section>
 <!-- Chatbot Button & Popup -->
 <button id="chatbot-toggler">
     <span class="material-symbols-rounded">mode_comment</span>
@@ -173,92 +142,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
 
 <!-- SCRIPTS -->
 <script src="../../js/head.js"></script>
-<script src="../../js/sidebar.js"></script>
-<script src="../../js/chatbot.js"></script>
 <script src="../../js/Modal/notifModal.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var ctx = document.getElementById('studentChart').getContext('2d');
-    // Create a gradient fill
-    var gradient = ctx.createLinearGradient(0, 0, 0, 220);
-    gradient.addColorStop(0, "#4f8cff");
-    gradient.addColorStop(1, "#b3d1ff");
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [{
-                label: 'Sessions Attended',
-                data: [1, 2, 1, 3, 2],
-                backgroundColor: gradient,
-                borderRadius: 12,
-                barPercentage: 0.6,
-                categoryPercentage: 0.5,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: '#22223b',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#4f8cff',
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                        label: function(context) {
-                            return ` ${context.parsed.y} session${context.parsed.y === 1 ? '' : 's'}`;
-                        }
-                    }
-                },
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    color: '#22223b',
-                    font: { weight: 'bold' }
-                }
-            },
-            layout: {
-                padding: { top: 10 }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: { family: 'Poppins, Arial, sans-serif', size: 14 },
-                        color: '#22223b'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#e0e7ef',
-                        borderDash: [4, 4]
-                    },
-                    ticks: {
-                        stepSize: 1,
-                        font: { family: 'Poppins, Arial, sans-serif', size: 13 },
-                        color: '#6b7280'
-                    }
-                }
-            },
-            animation: {
-                duration: 1200,
-                easing: 'easeOutQuart'
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-});
-</script>
+<script src="../../js/chatbot.js"></script>
 </body>
 </html>

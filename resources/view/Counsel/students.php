@@ -95,18 +95,17 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 
 <!-- CONTENT -->
 <section id="content">
-        <!-- NAVBAR -->
+    <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
-        <a href="#" class="nav-link">Welcome, Admin</a>
+        <a href="#" class="nav-link">Welcome, Counselor</a>
         <form action="#">
             <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+             
             </div>
         </form>
         <input type="checkbox" id="switch-mode" hidden>
-        <label for="switch-mode" class="switch-mode" aria-label="Switch Dark/Light Mode"></label>
+        
         <a href="#" id="notificationBell" class="notification">
             <i class='bx bxs-bell'></i>
             <span class="num" style="<?= $notifCount > 0 ? '' : 'display:none;' ?>">

@@ -9,14 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Prepare the query to join users and students
     $stmt = $conn->prepare("
         SELECT users.*, students.fname AS student_fname, parents.guardian_name AS parent_name 
-    FROM users 
-    LEFT JOIN students ON users.student_id = students.s_id 
-    LEFT JOIN parents ON users.parent_id = parents.p_id 
-    WHERE users.username = ?
+        FROM users 
+        LEFT JOIN students ON users.student_id = students.s_id 
+        LEFT JOIN parents ON users.parent_id = parents.p_id 
+        WHERE users.username = ?
     ");
     if (!$stmt) {
         $_SESSION['error_username'] = "Database error: " . $conn->error;
-        header("Location: index.php");
+        header("Location: ../../../index.php");
         exit();
     }
     $stmt->bind_param("s", $username);
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         header("Location: ../../../resources/view/Counsel/dashboard.php");
                     } else {
                         $_SESSION['error_username'] = "Counselor data not found!";
-                        header("Location: index.php");
+                        header("Location: ../../../index.php");
                     }
                     break;
                 case 'Parent':
@@ -63,21 +63,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location:  ../../../resources/view/Student/dashboard.php");
                     break;
                 default:
-                    header("Location: index.php");
+                    header("Location: ../../../index.php");
             }
             exit();
         } else {
             // Wrong password: set error for password field and preserve the username
             $_SESSION['error_password'] = "Wrong password!";
             $_SESSION['old_username'] = $username;
-            header("Location: index.php");
+            header("Location: ../../../index.php");
             exit();
         }
     } else {
         // User not found: set error for username field
         $_SESSION['error_username'] = "User  not found!";
-        header("Location: index.php");
+        header("Location: ../../../index.php");
         exit();
     }
+} else {
+    header("Location: ../../../index.php");
+    exit();
 }
 ?>

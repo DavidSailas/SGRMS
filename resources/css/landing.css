@@ -303,7 +303,7 @@ section {
     width: 100%;
     padding: 0.8rem 1.5rem 0.8rem 1.5rem; 
     border: 1px solid #bcd6f7;
-    border-radius: 60px;
+      border-radius: 6px;
     font-size: 1rem;
 }
 
@@ -348,7 +348,7 @@ section {
     background: #3C91E6;
     color: #fff;
     border: none;
-    border-radius: 60px;
+    border-radius: 6px;
     padding: 0.8rem 2.2rem;
     font-size: 1rem;
     cursor: pointer;

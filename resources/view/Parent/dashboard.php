@@ -2,7 +2,6 @@
 session_start();
 
 include '../../../database/db_connect.php';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +12,7 @@ include '../../../database/db_connect.php';
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
     <link rel="stylesheet" href="../../css/dashboard.css">
+    <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -28,7 +28,7 @@ include '../../../database/db_connect.php';
     </a>
     <ul class="side-menu top">
         <li class="active">
-            <a href="dashboard.php">
+            <a href="parent_dashboard.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
             </a>
@@ -69,37 +69,27 @@ include '../../../database/db_connect.php';
     </ul>
 </section>
     
-        <!-- CONTENT -->
-        <section id="content">
-        <!-- NAVBAR -->
-        <nav>
-                <i class='bx bx-menu'></i>
-        <a href="#" class="nav-link">
-            <?php
-                if (isset($_SESSION['parent_name'])) {
-                    echo "Welcome, " . htmlspecialchars($_SESSION['parent_name']);
-                } else {
-                    echo "Welcome, Parent";
-                }
-            ?>
-        </a>
-            <form action="#">
-                <div class="form-input">
-                    <input type="search" placeholder="Search...">
-                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-                </div>
-            </form>
-            <input type="checkbox" id="switch-mode" hidden>
-            <label for="switch-mode" class="switch-mode" aria-label="Switch Dark/Light Mode"></label>
-            <a href="#" id="notificationBell" class="notification"><i class='bx bxs-bell'></i><span class="num"></span></a>
-            <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
-        </nav>
-        <div id="notificationDropdown" style="display:none; position:absolute; right:40px; top:70px; background:white; border:1px solid #ccc; width:250px; z-index:1000;">
-            <ul style="list-style:none; margin:0; padding:0;"></ul>
-            <div id="seeMoreWrapper" style="text-align:center; display:none;">
-                <a href="#" id="seeMoreLink">See more</a>
+    <!-- CONTENT -->
+    <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+        <i class='bx bx-menu'></i>
+        <a href="#" class="nav-link">Welcome, Parent</a>
+        <form action="#">
+            <div class="form-input">
+             
             </div>
-        </div>
+        </form>
+        <input type="checkbox" id="switch-mode" hidden>
+        
+        <a href="#" id="notificationBell" class="notification">
+            <i class='bx bxs-bell'></i>
+            <span class="num" style="<?= $notifCount > 0 ? '' : 'display:none;' ?>">
+                <?= $notifCount > 0 ? $notifCount : '' ?>
+            </span>
+        </a>
+        <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
+    </nav>
 
     <div class="wrapper">
 
@@ -112,7 +102,16 @@ include '../../../database/db_connect.php';
         <!-- CHART + ACTIVITIES -->
         <div class="box-page">
 
-            
+            <section class="analytics">
+                <div style="display:flex;align-items:center;gap:18px;">
+                    <img src="img/people.png" alt="Parent" style="width:60px;height:60px;border-radius:50%;border:2px solid #e0e7ef;">
+                    <div>
+                        <h2 style="margin:0;">Welcome<?php if(isset($_SESSION['parent_name'])) echo ', ' . htmlspecialchars($_SESSION['parent_name']); ?>!</h2>
+                        <span style="color:#6b7280;">Here’s a quick overview of your account.</span>
+                    </div>
+                </div>
+            </section>
+
             <section class="activities">
                 <div class="activities-box">
                     <h2>Calendar</h2>
@@ -124,7 +123,7 @@ include '../../../database/db_connect.php';
 
             <section class="appointment">
                 <div class="appointment-box">
-                    <h2>Welcome</h2>
+                    <h2>Analytics</h2>
                 </div>
             </section>
         </div>
@@ -147,13 +146,24 @@ include '../../../database/db_connect.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td><img src="img/people.png"><p>Juan Dela Cruz</p></td><td>05-13-2025</td><td><span class="status completed">Completed</span></td></tr>
-                        <tr><td><img src="img/people.png"><p>Maria Santos</p></td><td>05-14-2025</td><td><span class="status pending">Pending</span></td></tr>
-                        <tr><td><img src="img/people.png"><p>Carlos Reyes</p></td><td>05-15-2025</td><td><span class="status process">Ongoing</span></td></tr>
+                        <tr>
+                            <td><img src="img/people.png"><p>Juan Dela Cruz</p></td>
+                            <td>05-13-2025</td>
+                            <td><span class="status completed"><i class='bx bx-check-circle'></i> Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/people.png"><p>Maria Santos</p></td>
+                            <td>05-14-2025</td>
+                            <td><span class="status pending"><i class='bx bx-time'></i> Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/people.png"><p>Carlos Reyes</p></td>
+                            <td>05-15-2025</td>
+                            <td><span class="status process"><i class='bx bx-loader-circle'></i> Ongoing</span></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-
 
             <div class="todo">
                 <div class="head">
@@ -171,10 +181,11 @@ include '../../../database/db_connect.php';
         </div>
     </div>
 </section>
-
+<?php include 'Modal/notifModal.php'; ?>
 
 <!-- SCRIPTS -->
 <script src="../../js/head.js"></script>
 <script src="../../js/linechart.js"></script>
+<script src="../../js/Modal/notifModal.js"></script>
 </body>
 </html>

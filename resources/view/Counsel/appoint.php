@@ -31,14 +31,12 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>School Guidance Record Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
     <link rel="stylesheet" href="../../css/table.css">
     <link rel="stylesheet" href="../../css/appoint.css">
     <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <!-- SIDEBAR -->
@@ -47,7 +45,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
         <img src="../../../public/images/logo/logo.svg" class="brand-logo" alt="SGRMS Logo">
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="dashboard.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -71,7 +69,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                 <span class="text">Reports</span>
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="appoint.php">
                 <i class='bx bxs-calendar'></i>
                 <span class="text">Appointments</span>
@@ -96,18 +94,17 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 
 <!-- CONTENT -->
 <section id="content">
-        <!-- NAVBAR -->
+    <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
         <a href="#" class="nav-link">Welcome, Counselor</a>
         <form action="#">
             <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+             
             </div>
         </form>
         <input type="checkbox" id="switch-mode" hidden>
-        <label for="switch-mode" class="switch-mode" aria-label="Switch Dark/Light Mode"></label>
+        
         <a href="#" id="notificationBell" class="notification">
             <i class='bx bxs-bell'></i>
             <span class="num" style="<?= $notifCount > 0 ? '' : 'display:none;' ?>">
@@ -169,7 +166,6 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 <?php include 'Modal/appointModal.php'; ?>
 
 <!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/head.js"></script>
 <script src="../../js/daypilot/daypilot-all.min.js"></script>
 <script src="../../js/daypilot/calendar.js"></script>

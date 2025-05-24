@@ -27,7 +27,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
     <title>Student Guidance Record Management System</title>
      <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
-    <link rel="stylesheet" href="../../css/sample.css">
+    <link rel="stylesheet" href="../../css/settings.css">
     <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -59,7 +59,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
                         <span class="text">Counselors</span>
                     </a>
             </li>
-            <li class="active">
+            <li>
                 <a href="parents.php">
                     <i class='bx bxs-chalkboard'></i> 
                     <span class="text">Parents</span>
@@ -86,7 +86,7 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
         </li>
     </ul>
     <ul class="side-menu">
-        <li>
+        <li class="active">
             <a href="settings.php">
                 <i class='bx bxs-cog'></i>
                 <span class="text">Settings</span>
@@ -115,18 +115,17 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
 
 <!-- CONTENT -->
 <section id="content">
-        <!-- NAVBAR -->
+    <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
         <a href="#" class="nav-link">Welcome, Admin</a>
         <form action="#">
             <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+             
             </div>
         </form>
         <input type="checkbox" id="switch-mode" hidden>
-        <label for="switch-mode" class="switch-mode" aria-label="Switch Dark/Light Mode"></label>
+        
         <a href="#" id="notificationBell" class="notification">
             <i class='bx bxs-bell'></i>
             <span class="num" style="<?= $notifCount > 0 ? '' : 'display:none;' ?>">
@@ -135,6 +134,24 @@ $studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 
         </a>
         <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
     </nav>
+
+    <div class="wrapper">
+        <div class="card" tabindex="0" onclick="window.location.href='#personal-info'">
+            <i class="bx bxs-user-detail"></i>
+            <h2>Personal info</h2>
+            <p>Provide personal details and how we can reach you.</p>
+        </div>
+        <div class="card" tabindex="0" onclick="window.location.href='#login-security'">
+            <i class="bx bxs-lock-alt"></i>
+            <h2>Login &amp; Security</h2>
+            <p>Update your password and secure your account.</p>
+        </div>
+        <div class="card" tabindex="0" onclick="window.location.href='#privacy'">
+            <i class="bx bxs-shield"></i>
+            <h2>Privacy</h2>
+            <p>Manage your personal data and connected services.</p>
+        </div>
+    </div>
 
 </section>
 

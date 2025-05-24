@@ -10,7 +10,7 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
     <title>Student Guidance Record Management System</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/bar.css">
-    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/table.css">
     <link rel="stylesheet" href="../../css/chatbot.css">
     <script src="../../js/notify.js" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
@@ -26,13 +26,14 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
         <span class="text">SGRMS</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
+        <li>
             <a href="dashboard.php">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li>
+        
+        <li class="active">
             <a href="case.php">
                 <i class='bx bxs-report'></i>
                 <span class="text">Reports</span>
@@ -61,7 +62,6 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
     </ul>
 </section>
 
-<!-- CONTENT -->
 <section id="content">
     <!-- NAVBAR -->
     <nav>
@@ -91,46 +91,103 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
         <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
     </nav>
 
-    <div class="wrapper">
+    
+    <main class="wrapper">
+        <div class="card">
 
-        <!-- Welcome & Stats -->
-        <div class="head-title">
-            <div class="left"><h1>Dashboard</h1></div>
-        </div>
-        <div class="dashboard-cards">
-            <div class="card stat-cases">
-                <h4><i class='bx bxs-calendar-check' style="color:#4f8cff;"></i> Appointments</h4>
-                <p>2</p>
-            </div>
-            <div class="card stat-white">
-                <h4><i class='bx bxs-report' style="color:#fdcb6e;"></i> Reports</h4>
-                <p>1</p>
-            </div>
-            <div class="card stat-white">
-                <h4><i class='bx bxs-user' style="color:#00b894;"></i> Counselor</h4>
-                <p>Ms. Cruz</p>
-            </div>
-        </div>
-
-        <!-- Analytics & Activities -->
-        <div class="box-page">
-            <section class="analytics">
-                <h2>Your Progress</h2>
-                <canvas id="studentChart" style="max-height:220px;"></canvas>
-            </section>
-            <section class="activities">
-                <div class="activities-box">
-                    <h2>Reminders</h2>
-                    <ul>
-                        <li>Prepare for your next counseling session</li>
-                        <li>Check your latest report</li>
-                        <li>Update your profile if needed</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-
+            <!-- Notification Modal -->
+            <div id="notificationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+    <div style="background:white; width:400px; margin:50px auto; padding:20px; border-radius:8px; position:relative;">
+        <h3>All Notifications</h3>
+        <ul id="modalNotificationList" style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+            <?php if ($notifModalResult && $notifModalResult->num_rows > 0): ?>
+                <?php while($notif = $notifModalResult->fetch_assoc()): ?>
+                    <li style="padding:8px 12px; border-bottom:1px solid #eee;">
+                        <?= htmlspecialchars($notif['message']) ?><br>
+                        <small style="color:#888;"><?= date('M d, Y H:i', strtotime($notif['timestamp'])) ?></small>
+                    </li>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <li style="padding:8px 12px;">No notifications</li>
+            <?php endif; ?>
+        </ul>
+        <button onclick="closeModal()" style="margin-top: 10px;">Close</button>
     </div>
+</div>
+
+            <div class="table-container">
+                <table id="caseTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Academic Level</th>
+                            <th>Case Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+<?php
+if (isset($_SESSION['s_id'])) {
+    $student_id = $_SESSION['s_id'];
+
+    $sql = "SELECT 
+                cr.case_id,
+                s.educ_level AS academic_level,
+                cr.case_type,
+                cr.status
+            FROM case_records cr
+            JOIN students s ON cr.student_id = s.s_id
+            WHERE cr.student_id = ?
+            ORDER BY cr.referral_date DESC";
+
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $student_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                    <td>" . htmlspecialchars($row['case_id']) . "</td>
+                    <td>" . htmlspecialchars($row['academic_level']) . "</td>
+                    <td>" . htmlspecialchars($row['case_type']) . "</td>
+                    <td>" . htmlspecialchars($row['status']) . "</td>
+                    <td class='actions'>
+                        <button class='btn btn-view' onclick='openViewCaseModal(" . $row['case_id'] . ")'>View</button>
+                    </td>
+                </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5' style='text-align:center;'>No records found</td></tr>";
+        }
+
+        $stmt->close();
+    } else {
+        echo "<tr><td colspan='5' style='text-align:center;'>Failed to prepare query.</td></tr>";
+    }
+} else {
+    echo "<tr><td colspan='5' style='text-align:center;'>Student not logged in.</td></tr>";
+}
+?>
+</tbody>
+
+                </table>
+            </div>
+
+            <div id="caseDetailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+                <div style="background:white; width:600px; margin:50px auto; padding:20px; border-radius:8px; position:relative; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <button class="close-modal-btn" aria-label="Close modal" style="position:absolute; top:12px; right:15px; background:transparent; border:none; font-size:1.8rem; font-weight:bold; color:#888; cursor:pointer; line-height:1; padding:0;">&times;</button>
+                    <h3>Case Details</h3>
+                    <div id="caseDetailsContent">Loading...</div>
+                </div>
+            </div>
+
+
+
+            <ul id="pagination-case" class="pagination"></ul>
+        </div>
+    </main>
 </section>
 
 <!-- Chatbot Button & Popup -->
@@ -168,97 +225,11 @@ $_SESSION['fname'] = isset($_SESSION['fname']) ? $_SESSION['fname'] : 'Student';
         </form>
     </div>
 </div>
-
 <?php include 'Modal/notifModal.php'; ?>
 
 <!-- SCRIPTS -->
 <script src="../../js/head.js"></script>
-<script src="../../js/sidebar.js"></script>
-<script src="../../js/chatbot.js"></script>
 <script src="../../js/Modal/notifModal.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var ctx = document.getElementById('studentChart').getContext('2d');
-    // Create a gradient fill
-    var gradient = ctx.createLinearGradient(0, 0, 0, 220);
-    gradient.addColorStop(0, "#4f8cff");
-    gradient.addColorStop(1, "#b3d1ff");
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [{
-                label: 'Sessions Attended',
-                data: [1, 2, 1, 3, 2],
-                backgroundColor: gradient,
-                borderRadius: 12,
-                barPercentage: 0.6,
-                categoryPercentage: 0.5,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: '#22223b',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#4f8cff',
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                        label: function(context) {
-                            return ` ${context.parsed.y} session${context.parsed.y === 1 ? '' : 's'}`;
-                        }
-                    }
-                },
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    color: '#22223b',
-                    font: { weight: 'bold' }
-                }
-            },
-            layout: {
-                padding: { top: 10 }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: { family: 'Poppins, Arial, sans-serif', size: 14 },
-                        color: '#22223b'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#e0e7ef',
-                        borderDash: [4, 4]
-                    },
-                    ticks: {
-                        stepSize: 1,
-                        font: { family: 'Poppins, Arial, sans-serif', size: 13 },
-                        color: '#6b7280'
-                    }
-                }
-            },
-            animation: {
-                duration: 1200,
-                easing: 'easeOutQuart'
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-});
-</script>
+<script src="../../js/chatbot.js"></script>
 </body>
 </html>
