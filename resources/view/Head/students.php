@@ -4,6 +4,19 @@ include '../../../database/db_connect.php';
 $activitySql = "SELECT activity, timestamp FROM activity_logs ORDER BY timestamp DESC LIMIT 10";
 $activityResult = $conn->query($activitySql);
 
+$sql = "SELECT cr.case_id, s.educ_level, s.section, s.program, s.lname, s.fname, cr.case_type, cr.status 
+        FROM case_records cr
+        JOIN students s ON cr.student_id = s.s_id";
+$result = $conn->query($sql);
+
+// Fetch notifications for modal
+$notifModalResult = $conn->query("SELECT message, timestamp FROM notifications ORDER BY id DESC LIMIT 20");
+
+// Fetch notification count and for bell (optional)
+$notifCountResult = $conn->query("SELECT COUNT(*) as cnt FROM notifications WHERE is_read = 0");
+$notifCount = $notifCountResult ? $notifCountResult->fetch_assoc()['cnt'] : 0;
+$notifResult = $conn->query("SELECT message FROM notifications ORDER BY id DESC LIMIT 10");
+$studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 'active'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +45,7 @@ $activityResult = $conn->query($activitySql);
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="#" id="profiling-link">
                 <i class='bx bxs-user'></i>
                 <span class="text">Profiling</span>
@@ -40,7 +53,7 @@ $activityResult = $conn->query($activitySql);
             </a>
         </li> 
         <ul class="submenu" id="profiling-submenu">
-              <li >
+              <li>
                 <a href="counsel.php">
                     <i class='bx bxs-user-voice'></i> 
                         <span class="text">Counselors</span>
@@ -52,7 +65,7 @@ $activityResult = $conn->query($activitySql);
                     <span class="text">Parents</span>
                 </a>
             </li>
-            <li class="active">
+            <li>
                 <a href="students.php">
                     <i class='bx bxs-graduation'></i> 
                     <span class="text">Students</span>
@@ -123,90 +136,91 @@ $activityResult = $conn->query($activitySql);
         <a href="#" class="profile"><img src="img/people.png" alt="Profile"></a>
     </nav>
 
-        <main class="wrapper">
+    <main class="wrapper">
         <div class="card">
-        <section class="student-list">
-            <div class="search-flex">
-                <h2>Student List</h2>                       
-                <div class="search-bar">
-                    <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name">
-                    <select name="filter_educ" id="filter_educ">
-                        <option value="">All Levels</option>
-                        <option value="Elementary">Elementary</option>
-                        <option value="High School">High School</option>
-                        <option value="College">College</option>
-                    </select>
-                     <button class="btn btn-add" onclick="openAddModal()">Add Student</button>
+            <section class="student-list">
+                <div class="search-flex">
+                    <h2>Student List</h2>                       
+                    <div class="search-bar">
+                        <input type="text" id="search" name="search" class="search" placeholder="Search by ID or Name">
+                        <select name="filter_educ" id="filter_educ">
+                            <option value="">All Levels</option>
+                            <option value="Elementary">Elementary</option>
+                            <option value="High School">High School</option>
+                            <option value="College">College</option>
+                        </select>
+                        <button class="btn btn-add" onclick="openAddModal()">Add Student</button>
+                    </div>
+                
                 </div>
-               
-            </div>
 
-            <div class="table-container">
-                <table id="studentTable">
-                    <thead>
-                        <tr>
-                            <th>Status</th>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>Educational Level</th>
-                            <th>Section/Program</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTableBody">
-                        <?php
-                            $sql = "SELECT s_id, id_num, prefix, lname, fname, mname, bod, educ_level, section, program,
-                                    (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
-                                    FROM students
-                                    WHERE status = 'active'";
+                <div class="table-container">
+                    <table id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Educational Level</th>
+                                <th>Section/Program</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <?php
+                                $sql = "SELECT s_id, id_num, suffix, lname, fname, mname, sex, bod, address, mobile_num, email, 
+                                        educ_level, year_level, section, program, previous_school, status,
+                                        (SELECT COUNT(*) FROM case_records WHERE student_id = students.s_id) AS case_count
+                                        FROM students
+                                        WHERE status = 'Active'|| 1";
 
-                            $result = $conn->query($sql);
+                                $result = $conn->query($sql);   
 
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $caseCount = (int)$row['case_count'];
-                                    if ($caseCount === 0) {
-                                        $statusClass = 'green';
-                                    } elseif ($caseCount <= 2) {
-                                        $statusClass = 'orange';
-                                    } else {
-                                        $statusClass = 'red';
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $caseCount = (int)$row['case_count'];
+                                        if ($caseCount === 0) {
+                                            $statusClass = 'green';
+                                        } elseif ($caseCount <= 2) {
+                                            $statusClass = 'orange';
+                                        } else {
+                                            $statusClass = 'red';
+                                        }
+
+                                        $bod = $row['bod'];
+                                        $birthdate = new DateTime($bod);
+                                        $today = new DateTime();
+                                        $age = $today->diff($birthdate)->y;
+
+                                        $suffix = ($row['suffix'] !== 'N/A') ? $row['suffix'] : '';
+                                        $mname = trim($row['mname']);
+                                        $mname = ($mname !== '') ? strtoupper(substr($mname, 0, 1)) . '.' : '';
+                                        $name = trim($row['lname'] . ", " . $row['fname'] . " " . $mname . " " . $suffix);
+
+                                        echo "<tr>
+                                            <td><span class='status-circle $statusClass' style='background: $statusClass !important;'></span></td>
+                                            <td>".htmlspecialchars($row['id_num'])."</td>
+                                            <td>".htmlspecialchars($name)."</td>
+                                            <td>".$age."</td>
+                                            <td>".htmlspecialchars($row['educ_level'])."</td>
+                                            <td>".(!empty($row['section']) ? htmlspecialchars($row['section']) : htmlspecialchars($row['program']))."</td>
+                                            <td>
+                                                <button class='btn btn-view' onclick='viewStudent(".$row['s_id'].")'>View</button>
+                                                <button class='btn btn-edit' onclick='openEditModal(".$row['s_id'].")'>Edit</button>
+                                                <button class='btn btn-delete' onclick='openDeleteConfirmationModal(".$row['s_id'].")'>Delete</button>
+                                            </td>
+                                        </tr>";
                                     }
-
-                                    $bod = $row['bod'];
-                                    $birthdate = new DateTime($bod);
-                                    $today = new DateTime();
-                                    $age = $today->diff($birthdate)->y;
-
-                                    $prefix = ($row['prefix'] !== 'N/A') ? $row['prefix'] : '';
-                                    $mname = trim($row['mname']);
-                                    $mname = ($mname !== '') ? strtoupper(substr($mname, 0, 1)) . '.' : '';
-                                    $name = trim($prefix . " " . $row['lname'] . ", " . $row['fname'] . " " . $mname);
-
-                                    echo "<tr>
-                                        <td><span class='status-circle $statusClass' style='background: $statusClass !important;'></span></td>
-                                        <td>".htmlspecialchars($row['id_num'])."</td>
-                                        <td>".htmlspecialchars($name)."</td>
-                                        <td>".$age."</td>
-                                        <td>".htmlspecialchars($row['educ_level'])."</td>
-                                        <td>".(!empty($row['section']) ? htmlspecialchars($row['section']) : htmlspecialchars($row['program']))."</td>
-                                        <td>
-                                            <button class='btn btn-view' onclick='viewStudent(".$row['s_id'].")'>View</button>
-                                            <button class='btn btn-edit' onclick='openEditModal(".$row['s_id'].")'>Edit</button>
-                                            <button class='btn btn-delete' onclick='openDeleteConfirmationModal(".$row['s_id'].")'>Delete</button>
-                                        </td>
-                                    </tr>";
+                                } else {
+                                    echo "<tr><td colspan='7'>No students found</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='7'>No students found</td></tr>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            <ul id="pagination-student" class="pagination"></ul>
-        </section>
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <ul id="pagination-student" class="pagination"></ul>
+            </section>
         </div>
     </main>
 </section>

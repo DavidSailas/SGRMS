@@ -45,6 +45,7 @@ function searchCases() {
         let caseType = row.cells[2].textContent.toLowerCase();
         let caseStatus = row.cells[3].textContent.trim().toLowerCase();
 
+        // Show if not archived and matches either Case ID or Case Type
         let show = (caseStatus !== "archived") &&
                    (caseID.includes(input) || caseType.includes(input));
         row.style.display = show ? "" : "none";

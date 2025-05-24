@@ -10,8 +10,6 @@
 
 body {
     background-color: #f3f4f6;
-    margin: 0;
-    padding: 0;
     background: var(--grey);
 	overflow-x: hidden;
 	animation: fadeIn 0.8s ease-in-out;

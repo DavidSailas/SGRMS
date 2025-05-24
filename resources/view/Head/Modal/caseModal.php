@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Counselor</title>
-    <link rel="stylesheet" href="../../CSS/modal.css">
+    <link rel="stylesheet" href="../../css/modal.css">
 </head>
 <body>
     <!-- caseModal.php -->

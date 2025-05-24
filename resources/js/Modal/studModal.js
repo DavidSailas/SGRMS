@@ -14,7 +14,9 @@ function openEditModal(studentId) {
     }
     modal.style.display = "block"; // Show modal immediately
 
-    fetch(`../../../app/Controllers/Head/StudentController/fetchstud.php?s_id=${studentId}`)
+    fetch(`../../../app/Controllers/Head/StudentController/fetchstud.php?s_id=${studentId}`
+        || `../../../app/Controllers/Counsel/StudentController/fetchstud.php?s_id=${studentId}`
+    )
         .then(response => response.json())
         .then(data => {
             if (!data.error) {
@@ -22,12 +24,12 @@ function openEditModal(studentId) {
                 document.getElementById('edit_s_id').value = data.s_id;
                 document.getElementById('edit_id_num').value = data.id_num;
                 document.getElementById('edit_id_num_display').textContent = data.id_num;
-                document.getElementById('edit_prefix').value = data.prefix;
+                document.getElementById('edit_suffix').value = data.suffix;
                 document.getElementById('edit_lname').value = data.lname;
                 document.getElementById('edit_fname').value = data.fname;
                 document.getElementById('edit_mname').value = data.mname;
                 document.getElementById('edit_bod').value = data.bod;
-                document.getElementById('edit_gender').value = data.gender;
+                document.getElementById('edit_gender').value = data.sex;
                 document.getElementById('edit_address').value = data.address;
                 document.getElementById('edit_mobile_num').value = data.mobile_num;
                 document.getElementById('edit_email').value = data.email;
@@ -49,7 +51,6 @@ function openEditModal(studentId) {
                 }
 
                 document.getElementById('edit_previous_school').value = data.previous_school;
-                document.getElementById('edit_last_year_school').value = data.last_year_school;
 
                 const editStudentImage = document.getElementById('edit_studentImage');
                 editStudentImage.src = data.s_image ? data.s_image : '../../Public/stud.img/circle-user.png'; 
@@ -72,7 +73,9 @@ function viewStudent(studentId) {
     document.getElementById('viewModalTitle').innerText = "View Student";
     document.getElementById('viewStudentModal').style.display = 'block';
 
-    fetch(`../../../app/Controllers/Head/StudentController/viewstud.php?s_id=${studentId}`)
+    fetch(`../../../app/Controllers/Head/StudentController/viewstud.php?s_id=${studentId}`
+        || `../../../app/Controllers/Counsel/StudentController/viewstud.php?s_id=${studentId}`
+    )
         .then(response => response.json())
         .then(data => {
             if (!data.error) {
@@ -87,6 +90,7 @@ function viewStudent(studentId) {
                 document.getElementById('studentEducLevel').innerText = data.educ_level;
                 document.getElementById('studentYearLevel').innerText = data.year_level;
                 document.getElementById('studentSectionProgram').innerText = data.section_program;
+                document.getElementById('studentPreviousSchool').innerText = data.previous_school;
 
                 // Add these lines for guardian info:
                 document.getElementById('viewGuardianName').innerText = data.guardian_name || '';
@@ -97,6 +101,26 @@ function viewStudent(studentId) {
                 const viewStudentImage = document.getElementById('viewStudentImage');
                 viewStudentImage.src = data.s_image ? data.s_image : '../../Public/stud.img/circle-user.png'; 
                 viewStudentImage.style.display = 'block';
+
+                const caseContainer = document.getElementById('caseRecordsContainer');
+                caseContainer.innerHTML = ''; // Clear old records
+
+                if (data.case_records && data.case_records.length > 0) {
+                    data.case_records.forEach(record => {
+                        const recordDiv = document.createElement('div');
+                        recordDiv.classList.add('case-record');
+                        recordDiv.innerHTML = `
+                            <div><strong>Title:</strong> ${record.title}</div>
+                            <div><strong>Description:</strong> ${record.description}</div>
+                            <div><strong>Date:</strong> ${record.date}</div>
+                            <hr>
+                        `;
+                        caseContainer.appendChild(recordDiv);
+                    });
+                } else {
+                    caseContainer.innerHTML = '<p>No case records found.</p>';
+                }
+
             }
         })
         .catch(error => console.error('Error fetching student data:', error));
@@ -115,7 +139,8 @@ function closeDeleteConfirmationModal() {
 function confirmDelete() {
     if (studentIdToDelete) {
         // Send a request to delete the student
-        fetch(`../../../app/Controllers/Head/StudentController/deletestud.php?s_id=${studentIdToDelete}`, {
+        fetch(`../../../app/Controllers/Head/StudentController/deletestud.php?s_id=${studentIdToDelete}`
+            || `../../../app/Controllers/Counsel/StudentController/deletestud.php?s_id=${studentIdToDelete}`, {
             method: 'DELETE' // Use DELETE method
         })
         .then(response => {

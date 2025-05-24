@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateTable() {
         const search = searchInput.value.trim();
-        const filter = filterSelect.value;
+        const filter = filterSelect.value; 
 
         // Corrected path to match your actual file location
         const url = `../../../app/Controllers/Head/StudentController/searchstud.php?search=${encodeURIComponent(search)}&filter_educ=${encodeURIComponent(filter)}`;

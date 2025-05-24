@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Counselor</title>
-    <link rel="stylesheet" href="../../CSS/modal.css">
+    <link rel="stylesheet" href="../../css/modal.css">
 </head>
 <body>
 
@@ -38,7 +38,7 @@
                 <select name="c_level">
                     <option value="">Select Department</option>
                     <option value="Elementary">Elementary</option>
-                    <option value="Highschool">Highschool</option>
+                    <option value="High School">Highschool</option>
                     <option value="College">College</option>
                 </select>
             </div>

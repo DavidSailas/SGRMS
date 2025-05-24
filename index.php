@@ -19,7 +19,7 @@
         <div class="navigation">
             <div class="navigation-links">
                 <button type="button" class="btn-login" onclick="openLoginModal()"><a href="#">Log in</a></button>
-                <a class="btn-primary" href="#">
+                <a class="btn-primary" href="resources/view/auth/register.php">
                     <span class="text">Sign Up</span>
                 </a>
             </div>

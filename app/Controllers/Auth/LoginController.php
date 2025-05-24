@@ -8,14 +8,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the query to join users and students
     $stmt = $conn->prepare("
-        SELECT users.*, students.fname 
-        FROM users 
-        LEFT JOIN students ON users.student_id = students.s_id 
-        WHERE users.username = ?
+        SELECT users.*, students.fname AS student_fname, parents.guardian_name AS parent_name 
+    FROM users 
+    LEFT JOIN students ON users.student_id = students.s_id 
+    LEFT JOIN parents ON users.parent_id = parents.p_id 
+    WHERE users.username = ?
     ");
     if (!$stmt) {
         $_SESSION['error_username'] = "Database error: " . $conn->error;
-        header("Location: ../../../index.php");
+        header("Location: index.php");
         exit();
     }
     $stmt->bind_param("s", $username);
@@ -31,6 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
             $_SESSION['fname'] = $user['fname']; 
+            $_SESSION['parent_id'] = $user['parent_id'];
+            $_SESSION['parent_name'] = $user['parent_name']; 
+
 
             // Redirect based on user role
             switch ($user['role']) {
@@ -38,7 +42,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: ../../../resources/view/Head/dashboard.php");
                     break;
                 case 'Guidance Counselor':
-                    header("Location:  ../../../resources/view/Counselor/dashboard.php");
+                    $counselorStmt = $conn->prepare("SELECT c_id FROM counselors WHERE c_id = ?");
+                    $counselorStmt->bind_param("i", $user['counselor_id']);
+                    $counselorStmt->execute();
+                    $counselorResult = $counselorStmt->get_result();
+
+                    if ($counselorResult->num_rows > 0) {
+                        $counselor = $counselorResult->fetch_assoc();
+                        $_SESSION['counselor_id'] = $counselor['c_id'];  
+                        header("Location: ../../../resources/view/Counsel/dashboard.php");
+                    } else {
+                        $_SESSION['error_username'] = "Counselor data not found!";
+                        header("Location: index.php");
+                    }
                     break;
                 case 'Parent':
                     header("Location:  ../../../resources/view/Parent/dashboard.php");

@@ -5,6 +5,20 @@ include '../../../database/db_connect.php';
 
 $activitySql = "SELECT activity, timestamp FROM activity_logs ORDER BY timestamp DESC LIMIT 10";
 $activityResult = $conn->query($activitySql);
+
+$sql = "SELECT cr.case_id, s.educ_level, s.section, s.program, s.lname, s.fname, cr.case_type, cr.status 
+        FROM case_records cr
+        JOIN students s ON cr.student_id = s.s_id";
+$result = $conn->query($sql);
+
+// Fetch notifications for modal
+$notifModalResult = $conn->query("SELECT message, timestamp FROM notifications ORDER BY id DESC LIMIT 20");
+
+// Fetch notification count and for bell (optional)
+$notifCountResult = $conn->query("SELECT COUNT(*) as cnt FROM notifications WHERE is_read = 0");
+$notifCount = $notifCountResult ? $notifCountResult->fetch_assoc()['cnt'] : 0;
+$notifResult = $conn->query("SELECT message FROM notifications ORDER BY id DESC LIMIT 10");
+$studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 'active'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,7 +119,7 @@ $activityResult = $conn->query($activitySql);
 
 <!-- CONTENT -->
 <section id="content">
-        <!-- NAVBAR -->
+         <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu'></i>
         <a href="#" class="nav-link">Welcome, Admin</a>
@@ -136,11 +150,35 @@ $activityResult = $conn->query($activitySql);
         <!-- STATS -->
         <section class="stats">
             <?php
-                $entities = ['case_records' => 'Cases', 'students' => 'Students', 'parents' => 'Parents', 'counselors' => 'Counselors'];
-                foreach ($entities as $table => $label) {
+                $entities = [
+                    'case_records' => [
+                        'label' => 'Cases',
+                        'class' => 'stat-cases',
+                        'icon'  => "<i class='bx bxs-folder-open' style='color:#004085; margin-right:8px;'></i>"
+                    ],
+                    'students' => [
+                        'label' => 'Students',
+                        'class' => 'stat-white',
+                        'icon'  => "<i class='bx bxs-graduation' style='color:#004085; margin-right:8px;'></i>"
+                    ],
+                    'parents' => [
+                        'label' => 'Parents',
+                        'class' => 'stat-white',
+                        'icon'  => "<i class='bx bxs-user-detail' style='color:#004085; margin-right:8px;'></i>"
+                    ],
+                    'counselors' => [
+                        'label' => 'Counselors',
+                        'class' => 'stat-white',
+                        'icon'  => "<i class='bx bxs-user-voice' style='color:#004085; margin-right:8px;'></i>"
+                    ]
+                ];
+                foreach ($entities as $table => $info) {
                     $result = $conn->query("SELECT COUNT(*) AS total FROM $table");
                     $count = $result ? $result->fetch_assoc()['total'] : "Error";
-                    echo "<div class='stat-box'><h2>$label</h2><p>$count</p></div>";
+                    echo "<div class='stat-box {$info['class']}'>
+                            <h2>{$info['icon']}{$info['label']}</h2>
+                            <p>$count</p>
+                          </div>";
                 }
             ?>
         </section>
@@ -179,13 +217,24 @@ $activityResult = $conn->query($activitySql);
                 const caseTypeData = <?php echo json_encode($caseTypeData); ?>;
                 </script>
             </section>
-            
-
 
             <!-- ACTIVITIES -->
             <section class="activities">
                 <div class="activities-box">
-                    <h2>Upcoming Appointments</h2>
+                    <h2>Case Distribution</h2>
+                    <div class="pie-flex">
+                        <div class="pie-chart-container">
+                            <canvas id="caseTypePie"></canvas>
+                        </div>
+                        <div id="caseTypeLegend" class="pie-legend"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPOINTMENTS -->
+            <section class="appointment">
+                <div class="appointment-box">
+                   <h2>Upcoming Appointments</h2>
                     <ul>
                         <?php
                             if ($activityResult && $activityResult->num_rows > 0) {
@@ -197,18 +246,6 @@ $activityResult = $conn->query($activitySql);
                             }
                         ?>
                     </ul>
-                </div>
-            </section>
-
-
-            <!-- APPOINTMENTS -->
-            <section class="appointment">
-                <div class="appointment-box pie-flex">
-                    <div class="pie-chart-container">
-                        <h2>Case Type</h2>
-                        <canvas id="caseTypePie"></canvas>
-                    </div>
-                    <div id="caseTypeLegend" class="pie-legend"></div>
                 </div>
             </section>
         </div>

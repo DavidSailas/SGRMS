@@ -5,6 +5,19 @@ include '../../../database/db_connect.php';
 $activitySql = "SELECT activity, timestamp FROM activity_logs ORDER BY timestamp DESC LIMIT 10";
 $activityResult = $conn->query($activitySql);
 
+$sql = "SELECT cr.case_id, s.educ_level, s.section, s.program, s.lname, s.fname, cr.case_type, cr.status 
+        FROM case_records cr
+        JOIN students s ON cr.student_id = s.s_id";
+$result = $conn->query($sql);
+
+// Fetch notifications for modal
+$notifModalResult = $conn->query("SELECT message, timestamp FROM notifications ORDER BY id DESC LIMIT 20");
+
+// Fetch notification count and for bell (optional)
+$notifCountResult = $conn->query("SELECT COUNT(*) as cnt FROM notifications WHERE is_read = 0");
+$notifCount = $notifCountResult ? $notifCountResult->fetch_assoc()['cnt'] : 0;
+$notifResult = $conn->query("SELECT message FROM notifications ORDER BY id DESC LIMIT 10");
+$studRes = $conn->query("SELECT s_id, lname, fname FROM students WHERE status = 'active'");
 ?>
 <!DOCTYPE html>
 <html lang="en">

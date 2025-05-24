@@ -55,4 +55,5 @@ function paginateTable(tableId, paginationId) {
 document.addEventListener('DOMContentLoaded', function() {
     paginateTable('studentTable', 'pagination-student');
     paginateTable('caseTable', 'pagination-case');
+    paginateTable('parentTable', 'pagination-parent');
 });

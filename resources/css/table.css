@@ -1,4 +1,8 @@
+
+
 /* Scrollable table wrapper */
+
+
 .table-container {
     max-height: 500px;
     overflow-y: auto;
@@ -128,4 +132,24 @@ table .status-circle.red {
 }
 .search-bar button:hover {
     background: #2563eb;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    vertical-align: middle;
+}
+.badge-gray {
+    background: #6b7280;
+}
+.badge-green {
+    background: #22c55e;
+}
+.badge-orange {
+    background: #f59e0b;
 }
